@@ -5,7 +5,7 @@ public abstract class Resept {
     //lager variabelene som trengs for Resept klassen
     Legemiddel legemiddel;
     Lege utskrivendeLege;
-    int pasientId;
+    Pasient pasient;
     int reit;
 
     //lager id med en statisk id teller
@@ -13,12 +13,12 @@ public abstract class Resept {
     static int id_counter = 1;
 
     //lager konstruktør med legemiddel, utskrivendeLege, pasientID og reit
-    public Resept(Legemiddel legemiddel, Lege utskrivendLege, int pasientId, int reit){
+    public Resept(Legemiddel legemiddel, Lege utskrivendLege, Pasient pasient, int reit){
 
         // impliserer hva parameterene er i den nåværende istansene 
         this.legemiddel = legemiddel;
         this.utskrivendeLege = utskrivendLege;
-        this.pasientId = pasientId;
+        this.pasient = pasient;
         this.reit = reit;
 
         //øker id med en for hver gang det blir laget et Resept objekt
@@ -44,7 +44,7 @@ public abstract class Resept {
 
     //returnerer pasientID til Resepten 
     public int hentPasientId(){
-        return pasientId;
+        return pasient.Id;
     }
 
     //returnerer antall reit som er igjen til Resepten 
@@ -67,7 +67,7 @@ public abstract class Resept {
 
     //returnerer all av informasjon for Resepten i en rydig måte
     public String toString(){
-        return "Legemiddel: "+legemiddel +"\n"+ "ID: "+ id+"\n"+ "Pasientid: "+ pasientId+"\n"+ "Reit: "+reit+
+        return "Legemiddel: "+legemiddel +"\n"+ "ID: "+ id+"\n"+ "Pasientid: "+ pasient+"\n"+ "Reit: "+reit+
         "\n"+"Utskrivendelege: "+ utskrivendeLege;
     }
 

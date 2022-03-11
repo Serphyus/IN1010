@@ -20,7 +20,7 @@ public class Spesialist extends Lege implements Godkjenningsfritak {
     //returnerer all av informasjon for spesialist
     @Override
     public String toString(){
-        return super.toString() + "\n"+"KontrollID: "+ kontrollid;
+        return super.toString() + String.format("\nKontrollId: %s", kontrollid);
     }
     
     

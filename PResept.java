@@ -2,8 +2,8 @@
 public class PResept extends HvitResept {
 
     //lager konsrtuktør for PResept som arver alle parameterene fra Hvitresept
-    public PResept(Legemiddel legemiddel, Lege utskrivendLege, int pasientId, int reit) {
-        super(legemiddel, utskrivendLege, pasientId, reit);
+    public PResept(Legemiddel legemiddel, Lege utskrivendLege, Pasient pasient, int reit) {
+        super(legemiddel, utskrivendLege, pasient, reit);
         
     }
 

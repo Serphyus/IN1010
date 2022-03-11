@@ -3,8 +3,8 @@
 public class BlaaResept extends Resept{
 
     //lager konsrtuktør for Blaaresepten som arver alle parameterene fra Resept
-    public BlaaResept(Legemiddel legemiddel, Lege utskrivendLege, int pasientId, int reit) {
-        super(legemiddel, utskrivendLege, pasientId, reit);
+    public BlaaResept(Legemiddel legemiddel, Lege utskrivendLege, Pasient pasient, int reit) {
+        super(legemiddel, utskrivendLege, pasient, reit);
     }
 
     //overskriver farge metoden fra Resept med addere return "blaa"

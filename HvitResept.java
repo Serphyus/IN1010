@@ -3,8 +3,8 @@
 public class HvitResept extends Resept {
 
     //lager konsrtuktør for Hvitresepten som arver alle parameterene fra Resept
-    public HvitResept(Legemiddel legemiddel, Lege utskrivendLege, int pasientId, int reit) {
-        super(legemiddel, utskrivendLege, pasientId, reit);
+    public HvitResept(Legemiddel legemiddel, Lege utskrivendLege, Pasient pasient, int reit) {
+        super(legemiddel, utskrivendLege, pasient, reit);
     }
 
     //overskriver farge metoden fra Resept med addere return "Hvit"
