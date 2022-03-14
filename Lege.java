@@ -1,7 +1,8 @@
 
 //lager superklassen Lege
 public class Lege implements Comparable<Lege>{
-    
+    private IndeksertListe<Resept> utskrevne_resepter = new IndeksertListe<>();
+
     //innehoder kun en String variabel som heter lege
     private String navn;
 
@@ -16,9 +17,54 @@ public class Lege implements Comparable<Lege>{
     public String hentNavn() {
         return this.navn;
     }
+
+    public HvitResept skrivHvitResept (Legemiddel legemiddel, Pasient pasient, int reit) throws UlovligUtskrift {
+        if (legemiddel instanceof Narkotisk) {
+            throw new UlovligUtskrift(this, legemiddel);
+        }
+        
+        HvitResept ny_resept = new HvitResept(legemiddel, this, pasient, reit);
+        this.utskrevne_resepter.leggTil(ny_resept);
+        return ny_resept;
+    }
+
+    public MilResept skrivMilResept (Legemiddel legemiddel, Pasient pasient) throws UlovligUtskrift {
+        if (legemiddel instanceof Narkotisk) {
+            throw new UlovligUtskrift(this, legemiddel);
+        }
+
+        MilResept ny_resept = new MilResept(legemiddel, this, pasient);
+        this.utskrevne_resepter.leggTil(ny_resept);
+        return ny_resept;
+    }
     
+    public PResept skrivPResept (Legemiddel legemiddel, Pasient pasient, int reit) throws UlovligUtskrift {
+        if (legemiddel instanceof Narkotisk) {
+            throw new UlovligUtskrift(this, legemiddel);
+        }
+        PResept ny_resept = new PResept(legemiddel, this, pasient, reit);
+        this.utskrevne_resepter.leggTil(ny_resept);
+        return ny_resept;
+    }
+
+    public BlaaResept skrivBlaaResept (Legemiddel legemiddel, Pasient pasient, int reit) throws UlovligUtskrift {
+        if (legemiddel instanceof Narkotisk) {
+            if ((this instanceof Spesialist) == false) {
+                throw new UlovligUtskrift(this, legemiddel);
+            }
+        }
+
+        BlaaResept ny_resept = new BlaaResept(legemiddel, this, pasient, reit);
+        this.utskrevne_resepter.leggTil(ny_resept);
+        return ny_resept;
+    }
+
+    public IndeksertListe<Resept> utskrevneResepter() {
+        return this.utskrevne_resepter;
+    }
+
     public int compareTo(Lege x) {
-        return this.navn.compareTo(x.hentNavn());
+        return this.navn.compareTo(x.hentNavn()); 
     }
 
     ////returnerer all av informasjon for lege
