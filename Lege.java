@@ -1,6 +1,6 @@
 
 //lager superklassen Lege
-public class Lege {
+public class Lege  implements Comparable<Lege>{
     
     //innehoder kun en String variabel som heter lege
     String navn;
