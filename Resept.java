@@ -44,7 +44,7 @@ public abstract class Resept {
 
     //returnerer pasientID til Resepten 
     public int hentPasientId(){
-        return pasient.Id;
+        return pasient.hentId();
     }
 
     //returnerer antall reit som er igjen til Resepten 

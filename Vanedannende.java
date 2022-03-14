@@ -6,8 +6,8 @@ public class Vanedannende extends Legemiddel{
 
     //vanedannende arver alle parameterne fra superklassen Legemiddel 
     //men har også en til parameter styrke
-    public Vanedannende(String navn, int pris, double d, int styrke){
-        super(navn, pris, d);
+    public Vanedannende(String navn, int pris, double virkestoff, int styrke){
+        super(navn, pris, virkestoff);
         this.styrke = styrke;
     
     }

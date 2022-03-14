@@ -13,12 +13,12 @@ public abstract class Legemiddel {
     
 
     //lager konstuktør for legemiddler med parametrene navn, pris og virkestoff
-    public Legemiddel(String navn, int pris, double d){
+    public Legemiddel(String navn, int pris, double virkestoff){
 
         // impliserer hva parameterene er i den nåværende istansene 
         this.navn = navn;
         this.pris = pris;
-        this.virkestoff = d;
+        this.virkestoff = virkestoff;
 
         //øker id med en for hver gang det blir laget et legemiddel objekt
         id = id_counter;
@@ -26,7 +26,7 @@ public abstract class Legemiddel {
     }
 
     //returnerer IDen til legemiddelet
-    public int hentid(){
+    public int hentId(){
         return id;
     }
 

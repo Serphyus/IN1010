@@ -32,10 +32,5 @@ public class Prioritetskoe<T extends Comparable<T>> extends Lenkeliste<T> {
             nyNyode.neste = next;
             next.forrige = nyNyode;}
         }
-}
-    
-
     }
-
-    
-
+}

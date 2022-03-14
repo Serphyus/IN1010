@@ -2,8 +2,8 @@ import java.util.Iterator;
 
 abstract class Lenkeliste<T> implements Liste<T>{
 
-    Node s = null;
-      
+    public Node s = null;
+    
     class Node{
         Node neste = null;
         Node forrige = null;

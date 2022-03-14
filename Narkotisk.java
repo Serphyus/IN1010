@@ -6,8 +6,8 @@ public class Narkotisk extends Legemiddel {
     //Narkotisk legemiddel har et heltall som sier hvor sterkt narkotisk det er
     //men har også en til parameter styrke
 
-    public Narkotisk(String navn, int pris, double d, int styrke){
-        super(navn, pris, d);
+    public Narkotisk(String navn, int pris, double virkestoff, int styrke){
+        super(navn, pris, virkestoff);
         this.styrke = styrke;
     }
 
