@@ -1,10 +1,8 @@
-
-//lager subklassen Spesialist som arver fra Lege
+// lager subklassen Spesialist som arver fra Lege
 // og implimenetere fra en interfacen Godkjenningsfritak
 public class Spesialist extends Lege implements Godkjenningsfritak {
-
-    //innehoder  String variabel som heter kontrollid
-    String kontrollid;
+    // Legger til String variabel kontrollid
+    private String kontrollid;
 
     //lager konstuktør for Spesialist med parametrene lege som den arver fra lege + kontrollID
     public Spesialist(String lege, String kontrollid) {

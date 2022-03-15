@@ -1,17 +1,17 @@
-
-//Lager superklassen Legemiddel 
 public abstract class Legemiddel {
+    // gjør alle instanse variablene protected for
+    // å bare tillate at metoder brukes for å hente
+    // dem og private på id_counter fordi den skal
+    // bare has tilgang til her slik at ingen subklasser
+    // kan endre på den
     
-    //med variablene navn, pris og virkestoff
-    String navn; 
-    int pris;
-    double virkestoff; 
+    protected String navn; 
+    protected int pris;
+    protected double virkestoff; 
 
-    //lager id med en statisk id teller
-    int id;
-    static int id_counter = 1;
+    protected int id;
+    private static int id_counter = 1;
     
-
     //lager konstuktør for legemiddler med parametrene navn, pris og virkestoff
     public Legemiddel(String navn, int pris, double virkestoff){
 
@@ -21,8 +21,8 @@ public abstract class Legemiddel {
         this.virkestoff = virkestoff;
 
         //øker id med en for hver gang det blir laget et legemiddel objekt
-        id = id_counter;
-        id_counter ++;
+        this.id = id_counter;
+        id_counter++;
     }
 
     //returnerer IDen til legemiddelet
