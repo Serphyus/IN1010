@@ -35,7 +35,7 @@ public class Legesystem{
         String middel_type = args[1];
 
         String navn = args[0];
-        int pris = Integer.parseInt(args[2]);
+        int pris = (int) Double.parseDouble(args[2]);
         double virkestoff = Double.parseDouble(args[3]);
 
         // lag Legemiddel basert på middel_type
@@ -227,6 +227,12 @@ public class Legesystem{
 
                 // splitt linjen til argumenter på komma tegnet
                 String[] args = line.split(",");
+
+                int i = 0;
+                for (String arg: args) {
+                    args[i] = arg.strip();
+                    i++;
+                }
 
                 // gjør en switch case for å spesifisere hvordan
                 // vi skal hontere argumentene på linjen basert
