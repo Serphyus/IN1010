@@ -71,6 +71,6 @@ public class Lege implements Comparable<Lege>{
 
     public String toString(){
         // returnerer en string med legens navn og antall utskrevne resepter
-        return String.format("Objekt av Lege:\nNavn: %s\nResepter: %s", navn, this.utskrevne_resepter.antall);
+        return String.format("Navn: %s\nResepter: %s", navn, this.utskrevne_resepter.antall);
     }
 }

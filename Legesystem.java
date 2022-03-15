@@ -295,4 +295,25 @@ public class Legesystem{
             System.exit(1);
         }
     }
+
+    public String toString() {
+        String total_string = "";
+
+        total_string += "\n ┏━━━━━━━━━━━━━━━━━━━━┓\n ┃ Leger i Legesystem ┃\n ┗━━━━━━━━━━━━━━━━━━━━┛\n\n";
+        for (Lege lege: this.leger) {
+            total_string += lege.toString() + "\n\n";
+        }
+
+        total_string += "\n ┏━━━━━━━━━━━━━━━━━━━━━━┓\n ┃ Pasient i Legesystem ┃\n ┗━━━━━━━━━━━━━━━━━━━━━━┛\n\n";
+        for (Pasient pasient: this.pasienter) {
+            total_string += pasient.toString() + "\n\n";
+        }
+
+        total_string += "\n ┏━━━━━━━━━━━━━━━━━━━━━━━━━━┓\n ┃ Legemiddler i Legesystem ┃\n ┗━━━━━━━━━━━━━━━━━━━━━━━━━━┛\n\n";
+        for (Legemiddel middel: this.legemiddler) {
+            total_string += middel.toString() + "\n\n";
+        }
+
+        return total_string;
+    }
 }

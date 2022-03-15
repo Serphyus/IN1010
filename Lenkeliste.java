@@ -34,10 +34,8 @@ abstract class Lenkeliste<T> implements Liste<T> {
         public T next() {
             // forflytt noden til neste og returner dens data
             node = node.neste;
-            return node.neste.data;
-            
+            return node.data;
         }
-        
     }
 
     public Iterator<T> iterator(){
