@@ -272,6 +272,11 @@ public class Legesystem{
                 catch (IndexOutOfBoundsException e) {
                     this.errorMsg("missing arguments");
                 }
+
+                // midlertidlig løsningfor generic exceptions
+                catch (Exception e) {
+                    this.errorMsg(e.toString());
+                }
             }
 
             // lukk filen
