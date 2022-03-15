@@ -3,5 +3,4 @@ public interface Liste <T> extends Iterable<T>{
     void leggTil (T x);
     T hent ();
     T fjern ();
-    }
-    
+}

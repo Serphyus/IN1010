@@ -68,7 +68,7 @@ public class Legesystem{
 
                             String lege_navn = args[1];
                             
-                            Lenkeliste<Lege>.Node lege_node = this.leger.s;
+                            Lenkeliste<Lege>.Node lege_node = this.leger.start;
                             while(lege_node.data.hentNavn() != lege_navn) {
                                 if (lege_node.neste == null) {
                                     System.out.println(String.format("No lege found with name: %s", lege_navn));
@@ -81,7 +81,7 @@ public class Legesystem{
                             
                             
                             int middel_id = Integer.parseInt(args[0]);
-                            Lenkeliste<Legemiddel>.Node middel_node = this.legemiddler.s;
+                            Lenkeliste<Legemiddel>.Node middel_node = this.legemiddler.start;
 
                             while (middel_node.data.hentId() != middel_id) {
                                 if (middel_node.neste == null) {
@@ -94,7 +94,7 @@ public class Legesystem{
 
 
                             int pasient_id = Integer.parseInt(args[2]);
-                            Lenkeliste<Pasient>.Node pasient_node = this.pasienter.s;
+                            Lenkeliste<Pasient>.Node pasient_node = this.pasienter.start;
                             
                             while (pasient_node.data.hentId() != pasient_id) {
                                 if (pasient_node.neste == null) {

@@ -1,38 +1,16 @@
 import java.util.Iterator;
 
-abstract class Lenkeliste<T> implements Liste<T>{
 
-    public Node s = null;
+abstract class Lenkeliste<T> implements Liste<T> {
+    protected Node start = null;
+    protected int antall;
+
+    class Node {
+        public Node neste = null;
+        public T data;
     
-    class Node{
-        Node neste = null;
-        Node forrige = null;
-        T data;
-        public Node (T data){
-            this.data = data;
-        }
-        
-        public void fyllNode(T x){
-            data = x;
-        }
-
-        public Node hentNeste(){
-            return neste;
-        }
-
-        public Node hentForrige(){
-            return forrige;
-        }
-
-        public T hentData(){
-            return data;
-        }
-        public void settNeste(Node neste){
-            this.neste = neste;
-        }
-        
-        public void settForrige(Node forrige){
-            this.forrige = forrige;
+        public Node(T x) {
+            this.data = x;
         }
     }
 
@@ -41,10 +19,12 @@ abstract class Lenkeliste<T> implements Liste<T>{
 
         @Override
         public boolean hasNext() {
+            // hvis start er null har den ikke neste
             if (node == null) {
                 return false;
             }
             
+            // skjekk om den neste noden er null
             else {
                 return (node.neste != null);
             }
@@ -52,6 +32,7 @@ abstract class Lenkeliste<T> implements Liste<T>{
     
         @Override
         public T next() {
+            // forflytt noden til neste og returner dens data
             node = node.neste;
             return node.neste.data;
             
@@ -59,88 +40,68 @@ abstract class Lenkeliste<T> implements Liste<T>{
         
     }
 
-    Node start = null;
-
-    //Metoden stoerrelse() skal returnere hvor mange elementer det er i listen.
-    @Override
-    public int stoerrelse(){
-        int stoerrelse = 0;
-        Node nyNode = start;
-        if (nyNode == null){
-            return stoerrelse;}
-
-        while(nyNode != null){
-            stoerrelse ++;
-            nyNode = nyNode.neste;}
-
-        return stoerrelse;
-    }
-
-    //Metoden leggTil(T x) skal legge inn et nytt element; det skal legges sist i listen
-    @Override
-    public void leggTil (T x){        
-        Node ny = new Node(x);
-
-        if ( start == null) {
-          start = ny;
-
-        } else {
-          ny.forrige = s;
-          s.neste = ny;
-        }
-        s = ny;        
-        }
-    
-    /* Metoden hent() skal returnere det første elementet i listen, men det skal
-    ikke fjernes fra listen */
-    @Override
-    public T hent(){
-        if (start == null){
-            return null;
-        } else{
-        return start.data;}
-        }
-    
-    //Metoden fjern() skal fjerne det første elementet i listen og returnere det.
-    @Override
-    public T fjern(){
-
-        if(start == null){
-            throw new UgyldigListeindeks(0);
-
-         } else if(start.neste != null) {
-
-            T dataen = start.data;
-            Node startTo = start.neste;
-            start.settNeste(null);
-            startTo.settForrige(null);
-            start = startTo;
-            return dataen;
-
-        } else{
-            
-            T dataen = start.data;
-            start.settNeste(null);
-            start = null;
-            return dataen;
-            }
-    }
-    
-    
-    public String toString(){
-        String listeinnhold ="";
-        if (start == null){
-            return "null";
-        } else {
-            while (start != null){
-                listeinnhold += start.neste.data + " --> ";
-                start = start.neste;
-            }
-            return listeinnhold +"null";
-        }
-    }
-
     public Iterator<T> iterator(){
+        // returner en liste iterator
         return new LenkelisteIterator();
+    }
+
+    @Override
+    public int stoerrelse() {
+        // returner antall noder
+        return this.antall;
+    }
+
+    @Override
+    public void leggTil(T x) {
+        // lag nyNode av x
+        Node nyNode = new Node(x);
+
+        // hvis start er tomt sett nyNode på start
+        if (this.start == null) {
+            this.start = nyNode;
+        }
+
+        else {
+            // iterer til node ikke har en neste
+            // og så sett nyNode på node.neste
+            Node node = this.start;
+            while (node.neste != null) {
+                node = node.neste;
+            }
+            node.neste = nyNode;
+        }
+
+        // inkrementer antallet
+        this.antall++;
+    }
+
+    @Override
+    public T hent() {
+        // returner dataen til første node hvis den ikke er null
+        if (this.start != null) {
+            return this.start.data;
+        }
+        return null;
+    }
+
+    @Override
+    public T fjern() {
+        // hvis start ikke er null fjern start noden
+        // og sett start.neste til start og fjern 1
+        // verdi fra antall
+        if (this.start != null) {
+            T node_data = hent();
+            this.start = this.start.neste;
+            this.antall--;
+            return node_data;
+        }
+
+        // hvis listen er tom gi en ugyldig indeks exception
+        throw new UgyldigListeindeks(0);
+    }
+
+    @Override
+    public String toString() {
+        return String.format("Lenkeliste:\nAntall: %s\n", this.stoerrelse());
     }
 }

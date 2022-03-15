@@ -1,112 +1,126 @@
-
-class IndeksertListe <T> extends Lenkeliste<T> {
-        
-        public void leggTil (int pos, T x) { 
-                //ugyldig indeks
-                if (pos < 0 || pos > stoerrelse()){
-                        throw new UgyldigListeindeks(pos); 
-                
-                //Hvis listen er tom og indeks er 0
-                } else if(start == null && pos == 0){
-                        leggTil(x);
-                
-                // Hvis listen ikke er tom og pos er lik stoerrelse (basically festes det et nytt element bakerst i listen)
-                }else if (pos == stoerrelse()){
-                        leggTil(x);
-                
-                //Listen er ikke tom men en ny node settes helt på starten 
-                } else if(pos == 0){
-                        Node nyNode = new Node(x);
-                        Node start1 = start;
-                        nyNode.settNeste(start1);
-                        start.settForrige(nyNode);
-                        start = nyNode;
-                }
-                // Settes et sted mellom den første elementet og det siste (Listen er ikke tom)
-                 else{
-                        int forpos = 0;
-                        Node nyNode = new Node(x);
-                        Node node = start;
-                        while (node != null && forpos != pos -1){
-                                node = node.neste;
-                                forpos ++;
-                        } 
-                       Node ePos = node.neste;
-                        node.settNeste(nyNode);
-                        nyNode.settForrige(node);
-                        nyNode.settNeste(ePos);
-                        ePos.settForrige(nyNode);
-                }
-
+public class IndeksertListe<T> extends Lenkeliste<T> {
+    public void leggTil (int pos, T x) {
+        // skjekker om pos er en gyldig indeks
+        if (pos < 0 || pos > stoerrelse()) {
+            throw new UgyldigListeindeks(pos);
         }
 
-        public void sett (int pos, T x) { 
-                if (pos < 0 || pos> stoerrelse()){
-                        throw new UgyldigListeindeks(pos);
+        // lag en nyNode av x til å settes inn
+        Node nyNode = new Node(x);
 
-                }else if (pos == stoerrelse()){
-                        throw new UgyldigListeindeks(pos);
-
-                } else{
-                        int forpos = 0;
-                        Node node = start;
-                        while (node != null && forpos != pos -1){
-                                node = node.neste;
-                                forpos ++;
-                        } node.neste.data = x;
-                }
-         }
-
-        
-        public T hent (int pos) {
-                if (pos < 0 || pos >= stoerrelse() || start == null){
-                        throw new UgyldigListeindeks(pos);
-                } else if ( pos==0){
-                        return start.data;
-                }
-                else{
-                        int forpos = 0;
-                        Node node = start;
-                        while (node != null && forpos != pos -1){
-                                node = node.neste;
-                                forpos ++;
-                        } return node.neste.data;
-                }
-
-         }
-
-     
-        public T fjern (int pos) {
-                if (pos < 0 || pos >= stoerrelse() || start == null){
-                        throw new UgyldigListeindeks(pos);
-                } else if (pos==0){
-                        T f = start.data;
-                        start = null; 
-                        return f;
-                } else if ( pos == stoerrelse() -1){
-                        int forpos = 0;
-                        Node node = start;
-                        while (node != null && forpos != pos -1){
-                                node = node.neste;
-                                forpos ++; 
-                        }  
-                        Node fjNode = node.neste;
-                        node.settNeste(null);
-                        return fjNode.data;
-                }
-                else{
-                        int forpos = 0;
-                        Node node = start;
-                        while (node != null && forpos != pos -1){
-                                node = node.neste;
-                                forpos ++;
-                        } 
-                        Node fjNode = node.neste; 
-                        node.settNeste(node.neste.neste);
-                        node.neste.settForrige(node);
-                        return fjNode.data;
-                }       
-                
-         }
+        // hvis listen ikke har noder sett nyNode på start
+        if (this.antall == 0) {
+            this.start = nyNode;
         }
         
+        else {
+            // hvis pos er 0 så må start endres
+            // på sammen med å sette nyNode.neste
+            if (pos == 0) {
+                nyNode.neste = this.start;
+                this.start = nyNode;
+            }
+
+            // hvis ikke pos er 0 flytter man bare
+            // noden før indeksen sin neste til den
+            // nye noden nyNode som skal settes inn
+            else {
+                int indeks = 0;
+                Node node = this.start;
+
+                while (indeks < pos-1) {
+                    node = node.neste;
+                    indeks++;
+                }
+
+                nyNode.neste = node.neste;
+                node.neste = nyNode;
+            }
+        }
+
+        // inkrementer antallet noder
+        this.antall++;
+    }
+
+    public void sett (int pos, T x) {
+        // skjekker om pos er en gyldig indeks
+        if (pos < 0 || pos >= stoerrelse()) {
+            throw new UgyldigListeindeks(pos);
+        }
+
+        // lager en indeks og node på start
+        int indeks = 0;
+        Node node = this.start;
+
+        // forlytter node til riktig indeks
+        while (indeks < pos) {
+            node = node.neste;
+            indeks++;
+        }
+
+        // endrer data til noden
+        node.data = x;
+    }
+    
+    public T hent (int pos) {
+        // skjekker om pos er en gyldig indeks
+        if (pos < 0 || pos >= stoerrelse()) {
+            throw new UgyldigListeindeks(pos);
+        }
+
+        // lager en indeks og node på start
+        int indeks = 0;
+        Node node = this.start;
+
+        // velger neste node til man peker på riktig indeks
+        while (indeks < pos) {
+            node = node.neste;
+            indeks++;
+        }
+        
+        // returnerer noden sin data
+        return node.data;
+    }
+    
+    public T fjern (int pos) {
+        // skjekker om pos er en gyldig indeks
+        if (pos < 0 || pos >= stoerrelse()) {
+            throw new UgyldigListeindeks(pos);
+        }
+
+        // lag ny node som peker til den første noden
+        Node node = this.start;
+
+        // hvis posisjon er på 0 kan vi bare forflytte
+        // start pekeren sin node til start.neste
+        if (pos == 0) {
+            this.start = this.start.neste;
+        }
+
+        else {
+            // sett indeks på 0
+            int indeks = 0;
+
+            // flytt node pekeren til indeksen
+            // matcher pos argumentet
+            while (indeks < pos-1) {
+                node = node.neste;
+                indeks++;
+            }
+            
+            // sett en node holder mens node.neste
+            // forflyttes til node.neste.neste
+            Node node_holder = node;
+            node = node.neste;
+            
+            if (node != null) {
+                node_holder.neste = node.neste;
+            }
+        }
+
+        // fjerner en verdi fra antall
+        this.antall--;
+        
+        return node.data;
+    }
+}

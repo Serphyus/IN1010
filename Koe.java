@@ -1,5 +1,4 @@
-public class Koe<T> extends Lenkeliste<T> {
+// Arver all lenkeliste funksjonalitet uten endring for
+// å kunne lage objekter siden lenkeliste er abstrakt
 
- }
-//Lenkeliste fungerer som en koe så da trengs det ikke å fylle noe her
-//alt av metoder blir arvet fra Lenkeliste
+public class Koe<T> extends Lenkeliste<T> {}
