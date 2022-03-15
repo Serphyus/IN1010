@@ -3,11 +3,27 @@ import java.io.FileNotFoundException;
 import java.util.Scanner;
 
 public class Legesystem{
-    Prioritetskoe<Lege> leger;
-    Koe<Pasient> pasienter;
-    Koe<Legemiddel> legemiddler;
+    Prioritetskoe<Lege> leger = new Prioritetskoe<>();
+    Koe<Pasient> pasienter = new Koe<>();
+    Koe<Legemiddel> legemiddler = new Koe<>();
 
     String type_gen = null;
+    private int line_num = 0;
+
+
+    public void debugMsg(String msg) {
+        // bruker ascii escape codes til å gjøre tekst
+        // output farget ved farge 34m som er blå og 0m
+        // som resetter fargen til konsollens default
+        System.out.println(String.format("\033[34m[Debug]\033[0m line: %3s | %s", this.line_num, msg));
+    }
+
+    public void errorMsg(String msg) {
+        // bruker ascii escape codes til å gjøre tekst
+        // output farget ved farge 33m som er rød og 0m
+        // som resetter fargen til konsollens default
+        System.out.println(String.format("\033[31m[Error]\033[0m line: %3s | %s", this.line_num, msg));
+    }
 
 
     private void lesPasient(String[] args) {
@@ -17,32 +33,53 @@ public class Legesystem{
     public void lesLegemiddel(String[] args) {
         // henter middel_type fra andre linje argument
         String middel_type = args[1];
-        
-        // sett middel før if statements for å
-        // unngå udefinert lokal variabel error 
-        Legemiddel middel = null;
+
+        String navn = args[0];
+        int pris = Integer.parseInt(args[2]);
+        double virkestoff = Double.parseDouble(args[3]);
 
         // lag Legemiddel basert på middel_type
-        if (middel_type == "vanlig") {
-            middel = new Vanlig(args[0], Integer.parseInt(args[2]), Integer.parseInt(args[3]));
+        // og legg det til i legemiddler koe.
+
+        // (String.equals(String) vs String == String)
+        // her må vi bruke equals metoden istedenfor
+        // == operatoren fordi String er ikke en primitiv
+        // type som char/int/float/boolean... og vil bare
+        // tillate == operatoren hvis begge objektene er
+        // en laget som en String men her bruker vi args
+        // som er en String[] array og hvert element ligger
+        // i minne som en char[] så hvis vi prøver å bruke
+        // == operatoren blir det som å gjøre skjekke om
+        // String == char[] som ikke vil gi true uansett
+        // char[] sitt innhold.
+
+        // [!] dette prinsippet vil gjentas i de neste metodene
+
+        if (middel_type.equals("vanlig")) {
+            this.legemiddler.leggTil(
+                new Vanlig(navn, pris, virkestoff)
+            );
         }
-        else if (middel_type == "narkotisk") {
-            middel = new Narkotisk(args[0],  Integer.parseInt(args[2]), Integer.parseInt(args[3]), Integer.parseInt(args[4]));
+        
+        else if (middel_type.equals("narkotisk")) {
+            int styrke = Integer.parseInt(args[4]);
+            this.legemiddler.leggTil(
+                new Narkotisk(navn, pris, virkestoff, styrke)
+            );
         }
-        else if (middel_type == "vanedannende") {
-            middel = new Vanedannende(args[0], Integer.parseInt(args[2]), Integer.parseInt(args[3]), Integer.parseInt(args[4]));
+        
+        else if (middel_type.equals("vanedannende")) {
+            int styrke = Integer.parseInt(args[4]);
+            this.legemiddler.leggTil(
+                new Vanedannende(navn, pris, virkestoff, styrke)
+            );
         }
 
-        // hvis middel er null så var ikke en gyldig
-        // middel_type gitt som på linjen og gir en
-        // error message
-        if (middel == null) {
-            System.out.println(String.format("[Error] invalid middel type: %s", middel_type));
-            return;
+        else {
+            // hvis kode når hit er det gitt en ugyldig
+            // middel type og derfor gir en feil melding
+            this.errorMsg(String.format("invalid middel type: \"%s\"", middel_type));
         }
-
-        // legg til det nye middelet til legemiddler
-        this.legemiddler.leggTil(middel);
     }
 
     public void lesLege(String[] args) {
@@ -50,7 +87,9 @@ public class Legesystem{
         // legen være en standard lege mens hvis
         // første argument er en annen verdi så
         // skal den brukes til å lage en spesialist
-        if (args[1] == "0") {
+
+        // String.equals() og ikke == operatoren
+        if (args[1].equals("0")) {
             this.leger.leggTil(new Lege(args[0]));
         } else {
             this.leger.leggTil(new Spesialist(args[0], args[1]));
@@ -64,10 +103,12 @@ public class Legesystem{
         Lenkeliste<Lege>.Node lege_node = this.leger.start;
 
         // loop gjennom listen til man finner en lege som matcher
-        // vår lege navn eller ikke og gi en feil for så å returnere
-        while(lege_node.data.hentNavn() != lege_navn) {
+        // vår lege navn eller ikke og gi en feil for så å returnere.
+        
+        // String.equals() og ikke == operatoren
+        while (lege_node.data.hentNavn().equals(lege_navn) != true) {
             if (lege_node.neste == null) {
-                System.out.println(String.format("[Error] No lege found with name: %s", lege_navn));
+                this.errorMsg(String.format("no lege found with name: %s", lege_navn));
                 return;
             }
             lege_node = lege_node.neste;
@@ -80,10 +121,10 @@ public class Legesystem{
         Lenkeliste<Legemiddel>.Node middel_node = this.legemiddler.start;
 
         // loop gjennom listen til man finner en legemiddel som matcher
-        // vår middel id eller ikke og gi en feil for så å returnere
+        // vår middel id eller ikke og gi en feil for så å returnere.
         while (middel_node.data.hentId() != middel_id) {
             if (middel_node.neste == null) {
-                System.out.println(String.format("[Error] No middel found with id: %s", middel_id));
+                this.errorMsg(String.format("no middel found with id: %s", middel_id));
                 return;
             }
             middel_node = middel_node.neste;
@@ -96,10 +137,11 @@ public class Legesystem{
         Lenkeliste<Pasient>.Node pasient_node = this.pasienter.start;
         
         // loop gjennom listen til man finner en pasient som matcher
-        // vår pasient id eller ikke og gi en feil for så å returnere
+        // vår pasient id eller ikke og gi en feil for så å returnere.
+        // vi kan bruke == operatoren her fordi vi sjekker int verdier.
         while (pasient_node.data.hentId() != pasient_id) {
             if (pasient_node.neste == null) {
-                System.out.println(String.format("[Error] No lege found with name: %s", pasient_id));
+                this.errorMsg(String.format("no lege found with name: %s", pasient_id));
                 return;
             }
             pasient_node = pasient_node.neste;
@@ -113,33 +155,38 @@ public class Legesystem{
 
         // sett reit før if statements for å unngå
         // udefinert lokal variabel error
+        
+        // String.equals() og ikke == operatoren
         int reit;
-        if (resept_type != "militaer") {
-            reit = Integer.parseInt(args[4]);
-        } else {
+        if (resept_type.equals("militaer")) {
             reit = 0;
+        }
+        else {
+            reit = Integer.parseInt(args[4]);
         }
 
         // lag resept basert på resept_type med legen
+
+        // String.equals() og ikke == operatoren
+        
         try {
-            if (resept_type == "hvit") {
+            if (resept_type.equals("hvit")) {
                 lege.skrivHvitResept(middel, pasient, reit);
             }
-            else if (resept_type == "blaa"){
+            else if (resept_type.equals("blaa")) {
                 lege.skrivBlaaResept(middel, pasient, reit);
             }
-            else if (resept_type == "militaer") {
+            else if (resept_type.equals("militaer")) {
                 lege.skrivMilResept(middel, pasient);
             }
-            else if (resept_type == "p") {
+            else if (resept_type.equals("p")) {
                 lege.skrivPResept(middel, pasient, reit);
             }                            
         }
 
         // hvis en ulovlig utskrift oppstår ta den imot
         catch (UlovligUtskrift e) {
-            System.out.println(e);
-            System.exit(1);
+            this.errorMsg(e.toString());
         }
     }
 
@@ -158,6 +205,9 @@ public class Legesystem{
             while (fil_leser.hasNextLine()) {
                 // les nåværende linje fra filen
                 String line = fil_leser.nextLine();
+                
+                // inkrementer linje nummer
+                this.line_num++;
 
                 // fjern ekstra mellomrom og skjekk om det gjør
                 // linjen tom og da hopp over linjen
@@ -170,6 +220,7 @@ public class Legesystem{
                 // linje. typen står på index 1 etter å splitte
                 // linjen -> {"#", "TYPE", ... }
                 if (line.charAt(0) == '#') {
+                    this.debugMsg(String.format("generator type updated: %s", line.split(" ")[1]));
                     this.type_gen = line.split(" ")[1];
                     continue;
                 }
@@ -181,25 +232,35 @@ public class Legesystem{
                 // vi skal hontere argumentene på linjen basert
                 // på vår nåværende type gitt av forrige linje
                 // med # tegn
+
+                if (this.type_gen == null) {
+                    this.errorMsg("no generator type selected");
+                    System.exit(1);
+                }
+
                 try {
                     switch(this.type_gen) {
                         case "Pasienter":
                             this.lesPasient(args);
+                            break;
 
                         case "Legemidler":
                             this.lesLegemiddel(args);
+                            break;
 
                         case "Leger":
                             this.lesLege(args);
+                            break;
 
                         case "Resepter":
                             this.lesResept(args);
+                            break;
 
-                        default:
+                        //default:
                             // hvis type_gen er null så ble det aldri gitt
                             // en type å bruke og programmet må stoppe
-                            System.out.println("[Error] no generator type selected");
-                            System.exit(1);
+                        //    this.errorMsg("no generator type selected");
+                        //    System.exit(1);
                     }
                 }
                 
@@ -209,11 +270,8 @@ public class Legesystem{
                 // å stoppe programmet for å kunne kjøre den store
                 // filen som skal inneholde noen feil
                 catch (IndexOutOfBoundsException e) {
-                    System.out.print(String.format("[Error] invalid arguments at line: %s", line_num));
+                    this.errorMsg("missing arguments");
                 }
-
-                // inkrementer linje nummer
-                line_num++;
             }
 
             // lukk filen
@@ -222,7 +280,7 @@ public class Legesystem{
 
         // hvis filen ikke eksisterer gi en feil melding
         catch (FileNotFoundException e) {
-            System.out.println(String.format("[Error] unable to locate file: %s", filename));
+            this.errorMsg(String.format("unable to locate file: %s", filename));
             System.exit(1);
         }
     }
