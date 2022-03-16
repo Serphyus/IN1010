@@ -111,7 +111,7 @@ public class Legesystem{
         Lege lege = null;
         for (Lege node: this.leger) {
             // String.equals() og ikke == operatoren
-            if (node.hentNavn().equals(lege_navn) != true) {
+            if (node.hentNavn().equals(lege_navn) == true) {
                 lege = node;
                 break;
             }
