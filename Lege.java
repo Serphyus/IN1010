@@ -69,6 +69,10 @@ public class Lege implements Comparable<Lege>{
         return this.navn.compareTo(x.hentNavn()); 
     }
 
+    public String hentKontrollID() {
+        return "0";
+    }
+
     public String toString(){
         // returnerer en string med legens navn og antall utskrevne resepter
         return String.format("Navn: %s\nResepter: %s", navn, this.utskrevne_resepter.antall);

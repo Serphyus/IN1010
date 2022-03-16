@@ -14,6 +14,14 @@ public class Pasient {
         id_teller++;
     }
 
+    public String hentNavn() {
+        return this.navn;
+    }
+
+    public String hentFoodselsdato() {
+        return this.foodselsdato;
+    }
+
     public int hentId() {
         return this.id;
     }

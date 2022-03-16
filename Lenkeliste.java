@@ -24,17 +24,19 @@ abstract class Lenkeliste<T> implements Liste<T> {
                 return false;
             }
             
-            // skjekk om den neste noden er null
+            // skjekk om den noden er null
             else {
-                return (node.neste != null);
+                return (node != null);
             }
         }
     
         @Override
         public T next() {
-            // forflytt noden til neste og returner dens data
+            // hent data fra noden og forflytt noden
+            // til neste og returner dens data
+            T data = node.data;
             node = node.neste;
-            return node.data;
+            return data;    
         }
     }
 

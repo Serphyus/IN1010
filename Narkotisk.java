@@ -1,6 +1,5 @@
 public class Narkotisk extends Legemiddel {
-
-    int styrke;
+    private int styrke;
     
 
     //Narkotisk legemiddel har et heltall som sier hvor sterkt narkotisk det er
@@ -18,6 +17,6 @@ public class Narkotisk extends Legemiddel {
 
     @Override
     public String toString() {
-    return super.toString() + "\n"+"Styrke: "+styrke;
-}
+        return super.toString() + "\n"+"Styrke: "+styrke;
+    }
 }

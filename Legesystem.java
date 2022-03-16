@@ -1,13 +1,17 @@
+import java.util.Iterator;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 
 public class Legesystem{
-    Prioritetskoe<Lege> leger = new Prioritetskoe<>();
-    Koe<Pasient> pasienter = new Koe<>();
-    Koe<Legemiddel> legemiddler = new Koe<>();
+    private Prioritetskoe<Lege> leger = new Prioritetskoe<>();
+    private Koe<Pasient> pasienter = new Koe<>();
+    private Koe<Legemiddel> legemiddler = new Koe<>();
 
-    String type_gen = null;
+    // interne variabler for å holde styr
+    // på hvilken type som leses fra filen
+    // og hvilken linjenummer man er på
+    private String type_gen = null;
     private int line_num = 0;
 
 
@@ -100,55 +104,69 @@ public class Legesystem{
     public void lesResept(String[] args) {
         // hent lege navn som vi skal finne i listen
         String lege_navn = args[1];
-        Lenkeliste<Lege>.Node lege_node = this.leger.start;
 
         // loop gjennom listen til man finner en lege som matcher
         // vår lege navn eller ikke og gi en feil for så å returnere.
         
-        // String.equals() og ikke == operatoren
-        while (lege_node.data.hentNavn().equals(lege_navn) != true) {
-            if (lege_node.neste == null) {
-                this.errorMsg(String.format("no lege found with name: %s", lege_navn));
-                return;
+        Lege lege = null;
+        for (Lege node: this.leger) {
+            // String.equals() og ikke == operatoren
+            if (node.hentNavn().equals(lege_navn) != true) {
+                lege = node;
+                break;
             }
-            lege_node = lege_node.neste;
-
         }
-        Lege lege = lege_node.data;
+
+        // hvis lege fortsatt er null fant vi ingen
+        // lege med et matchende navn
+        if (lege == null) {
+            this.errorMsg(String.format("no lege found with name: %s", lege_navn));
+            return;
+        }
         
+
         // hent middel id som vi skal finne i listen
         int middel_id = Integer.parseInt(args[0]);
-        Lenkeliste<Legemiddel>.Node middel_node = this.legemiddler.start;
 
         // loop gjennom listen til man finner en legemiddel som matcher
         // vår middel id eller ikke og gi en feil for så å returnere.
-        while (middel_node.data.hentId() != middel_id) {
-            if (middel_node.neste == null) {
-                this.errorMsg(String.format("no middel found with id: %s", middel_id));
-                return;
+        Legemiddel middel = null;
+        for (Legemiddel node: this.legemiddler) {
+            if (node.hentId() == middel_id) {
+                middel = node;
+                break;
             }
-            middel_node = middel_node.neste;
         }
-        Legemiddel middel = middel_node.data;
 
+        // hvis middel er null fant vi ingen
+        // middel med en matchende id og gan
+        // gi en feilmelding
+        if (middel == null) {
+            this.errorMsg(String.format("no middel found with id: %s", middel_id));
+            return;
+        }
 
         // hent paisent id som vi skal finne i listen
         int pasient_id = Integer.parseInt(args[2]);
-        Lenkeliste<Pasient>.Node pasient_node = this.pasienter.start;
         
         // loop gjennom listen til man finner en pasient som matcher
         // vår pasient id eller ikke og gi en feil for så å returnere.
         // vi kan bruke == operatoren her fordi vi sjekker int verdier.
-        while (pasient_node.data.hentId() != pasient_id) {
-            if (pasient_node.neste == null) {
-                this.errorMsg(String.format("no lege found with name: %s", pasient_id));
-                return;
+        Pasient pasient = null;
+        for (Pasient node: this.pasienter) {
+            if (node.hentId() == pasient_id) {
+                pasient = node;
+                break;
             }
-            pasient_node = pasient_node.neste;
         }
-
-        // hent pasient fra pasient_noden
-        Pasient pasient = pasient_node.data;
+        
+        // hvis pasient er null fant vi ingen
+        // pasient med en matchende id og kan
+        // gi en feilmelding
+        if (pasient == null) {
+            this.errorMsg(String.format("no lege found with name: %s", pasient_id));
+            return;
+        }
 
         // hent resept typen
         String resept_type = args[3];
@@ -261,12 +279,6 @@ public class Legesystem{
                         case "Resepter":
                             this.lesResept(args);
                             break;
-
-                        //default:
-                            // hvis type_gen er null så ble det aldri gitt
-                            // en type å bruke og programmet må stoppe
-                        //    this.errorMsg("no generator type selected");
-                        //    System.exit(1);
                     }
                 }
                 
@@ -296,24 +308,157 @@ public class Legesystem{
         }
     }
 
-    public String toString() {
-        String total_string = "";
+    public void legeTabell() {
+        String[] sections = {"Navn", "Resepter", "ID"};
+        int[] paddings = new int[3];
+        for (int i = 0; i < 3; i++) {
+            paddings[i] = sections[i].length();
+        }
 
-        total_string += "\n ┏━━━━━━━━━━━━━━━━━━━━┓\n ┃ Leger i Legesystem ┃\n ┗━━━━━━━━━━━━━━━━━━━━┛\n\n";
+        String[][] lege_data = new String[this.leger.stoerrelse()][3];
+
+        int index = 0;
         for (Lege lege: this.leger) {
-            total_string += lege.toString() + "\n\n";
+            lege_data[index][0] = lege.hentNavn();
+            lege_data[index][1] = String.format("%s", lege.utskrevneResepter().antall);
+            
+            if (lege instanceof Spesialist) {
+                Spesialist spesialist = (Spesialist)(lege);
+                lege_data[index][2] = spesialist.hentKontrollID();
+            } else {
+                lege_data[index][2] = "0";
+            }
+            index++;
         }
 
-        total_string += "\n ┏━━━━━━━━━━━━━━━━━━━━━━┓\n ┃ Pasient i Legesystem ┃\n ┗━━━━━━━━━━━━━━━━━━━━━━┛\n\n";
+        for (String[] data: lege_data) {
+            for (int i = 0; i < 3; i++) {
+                int length = data[i].length();
+                if (length > paddings[i]) {
+                    paddings[i] = length;
+                }
+            }
+        }
+
+        String string_format = "";
+        for (int padding: paddings) {
+            string_format += "%-"+ padding + "s  ";
+        }
+
+        System.out.println(String.format(string_format, (Object[])sections));
+        
+        String split = "";
+        for (int p: paddings) {
+            split += new String(new char[p+2]).replace("\0", "-");
+        }
+        System.out.println(split);
+        
+        for (String[] data: lege_data) {
+            System.out.println(String.format(string_format, data[0], data[1], data[2]));
+        }
+    }
+
+    public void pasientTabell() {
+        String[] sections = {"Navn", "Foodselsdato", "ID"};
+        int[] paddings = new int[3];
+        for (int i = 0; i < 3; i++) {
+            paddings[i] = sections[i].length();
+        }
+
+        String[][] pasient_data = new String[this.pasienter.stoerrelse()][3];
+
+        int index = 0;
         for (Pasient pasient: this.pasienter) {
-            total_string += pasient.toString() + "\n\n";
+            pasient_data[index][0] = pasient.hentNavn();
+            pasient_data[index][1] = pasient.hentFoodselsdato();
+            pasient_data[index][2] = String.format("%s", pasient.hentId());
+            index++;
         }
 
-        total_string += "\n ┏━━━━━━━━━━━━━━━━━━━━━━━━━━┓\n ┃ Legemiddler i Legesystem ┃\n ┗━━━━━━━━━━━━━━━━━━━━━━━━━━┛\n\n";
+        for (String[] data: pasient_data) {
+            for (int i = 0; i < 3; i++) {
+                int length = data[i].length();
+                if (length > paddings[i]) {
+                    paddings[i] = length;
+                }
+            }
+        }
+
+        String string_format = "";
+        for (int padding: paddings) {
+            string_format += "%-"+ padding + "s  ";
+        }
+
+        System.out.println(String.format(string_format, (Object[])sections));
+        
+        String split = "";
+        for (int p: paddings) {
+            split += new String(new char[p+2]).replace("\0", "-");
+        }
+        System.out.println(split);
+        
+        for (String[] data: pasient_data) {
+            System.out.println(String.format(string_format, data[0], data[1], data[2]));
+        }
+    }
+
+    public void middlerTabell() {
+        String[] sections = {"Navn", "ID", "Pris", "Virkestoff", "Styrke"};
+        int[] paddings = new int[5];
+        for (int i = 0; i < 5; i++) {
+            paddings[i] = sections[i].length();
+        }
+
+        String[][] middel_data = new String[this.legemiddler.stoerrelse()][5];
+
+        int index = 0;
         for (Legemiddel middel: this.legemiddler) {
-            total_string += middel.toString() + "\n\n";
+            middel_data[index][0] = middel.hentNavn();
+            middel_data[index][1] = String.format("%s", middel.hentId());
+            middel_data[index][2] = String.format("%s", middel.hentPris());
+            middel_data[index][3] = String.format("%s", middel.hentVirkestoff());
+            
+            if (middel instanceof Narkotisk) {
+                Narkotisk narkotisk = (Narkotisk)middel;
+                middel_data[index][4] = String.format("%s", narkotisk.hentNarkotiskStyrke());
+            }
+            
+            else if (middel instanceof Vanedannende) {
+                Vanedannende vanedannende = (Vanedannende)middel;
+                middel_data[index][4] = String.format("%s", vanedannende.hentVanedannendeStyrke());
+            }
+
+            else {
+                middel_data[index][4] = "";
+            }
+            
+            index++;
         }
 
-        return total_string;
+        for (String[] data: middel_data) {
+            for (int i = 0; i < 5; i++) {
+                int length = data[i].length();
+                if (length > paddings[i]) {
+                    paddings[i] = length;
+                }
+            }
+        }
+
+        String string_format = "";
+        for (int padding: paddings) {
+            string_format += "%-"+ padding + "s  ";
+        }
+
+        System.out.println(String.format(string_format, (Object[])sections));
+        
+        String split = "";
+        for (int p: paddings) {
+            split += new String(new char[p+2]).replace("\0", "-");
+        }
+        System.out.println(split);
+        
+        for (String[] data: middel_data) {
+            System.out.println(String.format(string_format, (Object[])data));
+        }
     }
 }
