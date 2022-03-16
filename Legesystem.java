@@ -349,7 +349,7 @@ public class Legesystem{
         
         String split = "";
         for (int p: paddings) {
-            split += new String(new char[p+2]).replace("\0", "-");
+            split += new String(new char[p+2]).replace("\0", "=");
         }
         System.out.println(split);
         
@@ -393,7 +393,7 @@ public class Legesystem{
         
         String split = "";
         for (int p: paddings) {
-            split += new String(new char[p+2]).replace("\0", "-");
+            split += new String(new char[p+2]).replace("\0", "=");
         }
         System.out.println(split);
         
@@ -453,7 +453,7 @@ public class Legesystem{
         
         String split = "";
         for (int p: paddings) {
-            split += new String(new char[p+2]).replace("\0", "-");
+            split += new String(new char[p+2]).replace("\0", "=");
         }
         System.out.println(split);
         
