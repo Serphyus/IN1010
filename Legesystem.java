@@ -326,157 +326,166 @@ public class Legesystem{
         }
     }
 
-    public void legeTabell() {
-        String[] sections = {"Navn", "Resepter", "ID"};
-        int[] paddings = new int[3];
-        for (int i = 0; i < 3; i++) {
-            paddings[i] = sections[i].length();
-        }
+    private void tabellerData(String[] keys, String[][] data) {
+        int[] paddings = new int[keys.length];
 
-        String[][] lege_data = new String[this.leger.stoerrelse()][3];
+        // calculate spasing between data
+        // on each line to spread printing
+        // evenly using padding int values
+        for (int i = 0; i < keys.length; i++) {
+            // by default the padding is
+            // the length of each key
+            paddings[i] = keys[i].length();
 
-        int index = 0;
-        for (Lege lege: this.leger) {
-            lege_data[index][0] = lege.hentNavn();
-            lege_data[index][1] = String.format("%s", lege.utskrevneResepter().antall);
-            
-            if (lege instanceof Spesialist) {
-                Spesialist spesialist = (Spesialist)(lege);
-                lege_data[index][2] = spesialist.hentKontrollID();
-            } else {
-                lege_data[index][2] = "0";
-            }
-            index++;
-        }
-
-        for (String[] data: lege_data) {
-            for (int i = 0; i < 3; i++) {
-                int length = data[i].length();
-                if (length > paddings[i]) {
+            for (String[] section: data) {
+                int length = section[i].length();
+                if (paddings[i] < length) {
                     paddings[i] = length;
                 }
             }
         }
 
+        // create formatter
         String string_format = "";
         for (int padding: paddings) {
             string_format += "%-"+ padding + "s  ";
         }
 
-        System.out.println(String.format(string_format, (Object[])sections));
+        // avoid warning
+        System.out.println(String.format(string_format, (Object[])keys));
         
-        String split = "";
+        // print splitter
+        String split_line = "";
         for (int p: paddings) {
-            split += new String(new char[p+2]).replace("\0", "=");
+            split_line += new String(new char[p+2]).replace("\0", "=");
         }
-        System.out.println(split);
-        
-        for (String[] data: lege_data) {
-            System.out.println(String.format(string_format, data[0], data[1], data[2]));
+
+        System.out.println(split_line);
+
+        // print out all data
+        for (String[] section: data) {
+            System.out.println(String.format(string_format, (Object[])section));
         }
     }
 
-    public void pasientTabell() {
-        String[] sections = {"Navn", "Foodselsdato", "ID"};
-        int[] paddings = new int[3];
-        for (int i = 0; i < 3; i++) {
-            paddings[i] = sections[i].length();
+    public void legeTabell() {
+        // keys for å lage data områder på toppen av tabellen
+        String[] keys = {"Lege Navn", "Resepter", "ID"};
+
+        // lag en 2 dimensjonal liste som skal holde på hver
+        // eneste lege i lege_data[n] og i lege_data[n][0-4]
+        // skal den holde data om lege
+        String[][] lege_data = new String[this.leger.stoerrelse()][3];
+
+        // start på indeks 0 og bruk den for å spesifisere
+        // legen som dataen skal lagres til og puttets
+        // i en tabell senere
+        int index = 0;
+        for (Lege lege: this.leger) {
+            // hent diverse data om legen og lagre det i
+            // lege_data hos denne legen sin indeks
+            lege_data[index][0] = lege.hentNavn();
+            lege_data[index][1] = String.format("%s", lege.utskrevneResepter().antall);
+            
+            // hvis legen er en spesialist så må vi
+            // type caste det slik at java compileren
+            // skjønner at det finnes en hentKontrollID
+            // metode å kalle på 
+            if (lege instanceof Spesialist) {
+                Spesialist spesialist = (Spesialist)(lege);
+                lege_data[index][2] = spesialist.hentKontrollID();
+            } 
+            
+            // hvis ikke legen er en spesialist setter
+            // vi kontroll id til en blank verdi siden
+            // vanlige leger har ikke kontroll id 
+            else {
+                lege_data[index][2] = "";
+            }
+            index++;
         }
 
+        tabellerData(keys, lege_data);
+    }
+
+    public void pasientTabell() {
+        // keys for å lage data områder på toppen av tabellen
+        String[] keys = {"Pasient Navn", "Foodselsdato", "ID"};
+
+        // lag en 2 dimensjonal liste som skal holde på
+        // hver eneste pasient i pasient_data[n] og i
+        // pasient_data[n][0-4] skal den holde data om
+        // pasient
         String[][] pasient_data = new String[this.pasienter.stoerrelse()][3];
 
+        // start på indeks 0 og bruk den for å spesifisere
+        // pasienten som dataen skal lagres til og puttets
+        // i en tabell senere
         int index = 0;
         for (Pasient pasient: this.pasienter) {
+            // hent diverse data om pasienten og lagre det i
+            // pasient_data hos denne pasienten sin indeks
             pasient_data[index][0] = pasient.hentNavn();
             pasient_data[index][1] = pasient.hentFoodselsdato();
             pasient_data[index][2] = String.format("%s", pasient.hentId());
             index++;
         }
 
-        for (String[] data: pasient_data) {
-            for (int i = 0; i < 3; i++) {
-                int length = data[i].length();
-                if (length > paddings[i]) {
-                    paddings[i] = length;
-                }
-            }
-        }
-
-        String string_format = "";
-        for (int padding: paddings) {
-            string_format += "%-"+ padding + "s  ";
-        }
-
-        System.out.println(String.format(string_format, (Object[])sections));
-        
-        String split = "";
-        for (int p: paddings) {
-            split += new String(new char[p+2]).replace("\0", "=");
-        }
-        System.out.println(split);
-        
-        for (String[] data: pasient_data) {
-            System.out.println(String.format(string_format, data[0], data[1], data[2]));
-        }
+        // print en tabell av pasient dataen
+        tabellerData(keys, pasient_data);
     }
 
     public void middlerTabell() {
-        String[] sections = {"Navn", "ID", "Pris", "Virkestoff", "Styrke"};
-        int[] paddings = new int[5];
-        for (int i = 0; i < 5; i++) {
-            paddings[i] = sections[i].length();
-        }
+        // keys for å lage data områder på toppen av tabellen
+        String[] keys = {"Legemiddel Navn", "ID", "Pris", "Virkestoff", "Styrke"};
 
+        // lag en 2 dimensjonal liste som skal holde på
+        // hver eneste legemiddel i middel_data[n] og
+        // i middel_data[n][0-4] skal den holde data om
+        // legemiddelet
         String[][] middel_data = new String[this.legemiddler.stoerrelse()][5];
 
+        // start på indeks 0 og bruk den for å spesifisere
+        // legemiddelet som dataen skal lagres til og puttets
+        // i en tabell senere
         int index = 0;
         for (Legemiddel middel: this.legemiddler) {
+            // hent diverse data om legemiddelet og lagre det
+            // i middel_data hos denne middelet sin indeks
             middel_data[index][0] = middel.hentNavn();
             middel_data[index][1] = String.format("%s", middel.hentId());
             middel_data[index][2] = String.format("%s", middel.hentPris());
             middel_data[index][3] = String.format("%s", middel.hentVirkestoff());
             
+            // hvis legemiddelet er narkotisk så må vi
+            // type caste det slik at java compileren
+            // skjønner at det finnes en hentNarkotiskStyrke
+            // metode å kalle på 
             if (middel instanceof Narkotisk) {
                 Narkotisk narkotisk = (Narkotisk)middel;
                 middel_data[index][4] = String.format("%s", narkotisk.hentNarkotiskStyrke());
             }
             
+            // samme prinsipp som i narkotisk mens her
+            // heter metoden som dataen skal hentes fra
+            // hentVanedannendeStyrke
             else if (middel instanceof Vanedannende) {
                 Vanedannende vanedannende = (Vanedannende)middel;
                 middel_data[index][4] = String.format("%s", vanedannende.hentVanedannendeStyrke());
             }
 
+            // dette tilfelle er for vanlig legemiddler
+            // og de har ingen styrke så vi setter en
+            // tom string som styrke data
             else {
                 middel_data[index][4] = "";
             }
             
+            // inkrementer til neste indeks
             index++;
         }
 
-        for (String[] data: middel_data) {
-            for (int i = 0; i < 5; i++) {
-                int length = data[i].length();
-                if (length > paddings[i]) {
-                    paddings[i] = length;
-                }
-            }
-        }
-
-        String string_format = "";
-        for (int padding: paddings) {
-            string_format += "%-"+ padding + "s  ";
-        }
-
-        System.out.println(String.format(string_format, (Object[])sections));
-        
-        String split = "";
-        for (int p: paddings) {
-            split += new String(new char[p+2]).replace("\0", "=");
-        }
-        System.out.println(split);
-        
-        for (String[] data: middel_data) {
-            System.out.println(String.format(string_format, (Object[])data));
-        }
+        // print en tabell av middel dataen
+        tabellerData(keys, middel_data);
     }
 }
