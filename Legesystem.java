@@ -319,8 +319,8 @@ public class Legesystem{
             System.exit(1);
         }
 
-        // if error count is above 0
-        // give the user a warning
+        // hvis error count er mer enn 0 gi
+        // en advarsel melding til brukeren
         if (err_count > 0) {
             System.out.println();
             this.warningMsg(String.format("Errors occurred when reading file: %s", err_count));
