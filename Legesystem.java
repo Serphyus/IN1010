@@ -257,6 +257,7 @@ public class Legesystem{
                 // splitt linjen til argumenter på komma tegnet
                 String[] args = line.split(",");
 
+                // strip each argument to remove extra spaces
                 int i = 0;
                 for (String arg: args) {
                     args[i] = arg.strip();
@@ -266,7 +267,7 @@ public class Legesystem{
                 // gjør en switch case for å spesifisere hvordan
                 // vi skal hontere argumentene på linjen basert
                 // på vår nåværende type gitt av forrige linje
-                // med # tegn
+                // med '#' tegn
 
                 if (this.type_gen == null) {
                     this.errorMsg("no generator type selected");
