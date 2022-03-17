@@ -14,19 +14,27 @@ public class Legesystem{
     private String type_gen = null;
     private int line_num = 0;
 
+    // error counter
+    private static int err_count = 0;
+
 
     public void debugMsg(String msg) {
         // bruker ascii escape codes til å gjøre tekst
         // output farget ved farge 34m som er blå og 0m
         // som resetter fargen til konsollens default
-        System.out.println(String.format("\033[34m[Debug]\033[0m line: %3s | %s", this.line_num, msg));
+        System.out.println(String.format("\033[34m[Debug]\033[0m   line: %3s | %s", this.line_num, msg));
+    }
+
+    public void warningMsg(String msg) {
+        System.out.println(String.format("\033[33m[Warning]\033[0m %s", msg));
     }
 
     public void errorMsg(String msg) {
         // bruker ascii escape codes til å gjøre tekst
         // output farget ved farge 33m som er rød og 0m
         // som resetter fargen til konsollens default
-        System.out.println(String.format("\033[31m[Error]\033[0m line: %3s | %s", this.line_num, msg));
+        System.out.println(String.format("\033[31m[Error]\033[0m   line: %3s | %s", this.line_num, msg));
+        err_count++;
     }
 
 
@@ -139,7 +147,7 @@ public class Legesystem{
         }
 
         // hvis middel er null fant vi ingen
-        // middel med en matchende id og gan
+        // middel med en matchende id og kan
         // gi en feilmelding
         if (middel == null) {
             this.errorMsg(String.format("no middel found with id: %s", middel_id));
@@ -210,6 +218,9 @@ public class Legesystem{
 
 
     public void lesFraFil(String filename){
+        // reset error counter
+        err_count = 0;
+
         try {
             // lag et fil objekt og en scanner for å lese filen
             File data_fil = new File(filename);
@@ -305,6 +316,13 @@ public class Legesystem{
         catch (FileNotFoundException e) {
             this.errorMsg(String.format("unable to locate file: %s", filename));
             System.exit(1);
+        }
+
+        // if error count is above 0
+        // give the user a warning
+        if (err_count > 0) {
+            System.out.println();
+            this.warningMsg(String.format("Errors occurred when reading file: %s", err_count));
         }
     }
 
