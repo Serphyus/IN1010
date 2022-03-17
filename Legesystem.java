@@ -330,14 +330,19 @@ public class Legesystem{
     private void tabellerData(String[] keys, String[][] data) {
         int[] paddings = new int[keys.length];
 
-        // calculate spasing between data
-        // on each line to spread printing
-        // evenly using padding int values
+        // regn ut mellomromet mellom hver av
+        // keys string verdiene for å skape et
+        // gjevnt mellomrom mellom dataen
         for (int i = 0; i < keys.length; i++) {
-            // by default the padding is
-            // the length of each key
+            // default mellomromer lengden på hver
+            // string i keys argumentet
             paddings[i] = keys[i].length();
 
+            // skjekk om lengden på hver string verdi
+            // i den 2 dimensjonale arrayen er større 
+            // enn lengden på keys String verdiene og
+            // hvis den er det sett den nye lengde 
+            // verdien til dataen sin string lengde 
             for (String[] section: data) {
                 int length = section[i].length();
                 if (paddings[i] < length) {
@@ -346,13 +351,19 @@ public class Legesystem{
             }
         }
 
-        // create formatter
+        // lag en string formatter til som bruker
+        // paddings verdiene til å sette mellomrom
+        // mellom hvert argument som blir formattert
+        // inn med String.format("...", arg1, arg2, ...)
         String string_format = "";
         for (int padding: paddings) {
             string_format += "%-"+ padding + "s  ";
         }
 
-        // avoid warning
+        // (Object[]keys) er en type casting som gjør
+        // at String.format ikke gir en advarsel på
+        // kompilatoren når du gir argumentene som en
+        // array 
         System.out.println(String.format(string_format, (Object[])keys));
         
         // print splitter
@@ -361,10 +372,17 @@ public class Legesystem{
             split_line += new String(new char[p+2]).replace("\0", "=");
         }
 
+        // print tabell splitteren som består
+        // av mange '=' bokstaver
         System.out.println(split_line);
 
-        // print out all data
+        // print hver seksjon med data gitt fra data
+        // argumentet som da er en 2 dimensjonal array
         for (String[] section: data) {
+            // (Object[]keys) er en type casting som gjør
+            // at String.format ikke gir en advarsel på
+            // kompilatoren når du gir argumentene som en
+            // array
             System.out.println(String.format(string_format, (Object[])section));
         }
     }
