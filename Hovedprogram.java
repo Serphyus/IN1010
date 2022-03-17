@@ -5,16 +5,25 @@ public class Hovedprogram {
     private static Scanner console_input = new Scanner(System.in);
     private static Legesystem legesystem = new Legesystem();
 
+    private static void clearScreen() {
+        System.out.print("\033[H\033[2J\033[3J");
+    }
+
+    private static void returnPrompt() {
+        System.out.println("\n[Press Enter To Return]\n");
+        console_input.nextLine();
+    }
+
     private static void listInternals() {
-        System.out.println("\nLeger:");
+        clearScreen();
+
+        System.out.println("\n");
         legesystem.legeTabell();
-        System.out.println();
 
-        System.out.println("\nPasienter:");
+        System.out.println("\n");
         legesystem.pasientTabell();
-        System.out.println();
 
-        System.out.println("\nLegemiddler:");
+        System.out.println("\n");
         legesystem.middlerTabell();
         System.out.println();
     }
@@ -23,18 +32,10 @@ public class Hovedprogram {
 
     }
 
-    private static void returnPrompt() {
-        System.out.println("\n[Press Enter To Return]\n");
-        console_input.nextLine();
-    }
-
-    private static void clearScreen() {
-        System.out.print("\033[2J\033[H");
-    }
-
     private static void MainMenu() {
         while (true) {
             clearScreen();
+            
             System.out.println("Main menu:\n==========\n");
 
             System.out.println(" 1) Print legesystem innhold");
@@ -60,6 +61,9 @@ public class Hovedprogram {
                     break;
                 case "5":
                     System.exit(0);
+                
+                default:
+                    continue;
             }
 
             returnPrompt();
