@@ -19,7 +19,7 @@ public class Legesystem{
 
 
     public void debugMsg(String msg) {
-        // bruker ascii escape codes til å gjøre tekst
+        // bruker ansi escape codes til å gjøre tekst
         // output farget ved farge 34m som er blå og 0m
         // som resetter fargen til konsollens default
         System.out.println(String.format("\033[34m[Debug]\033[0m   line: %3s | %s", this.line_num, msg));
@@ -30,7 +30,7 @@ public class Legesystem{
     }
 
     public void errorMsg(String msg) {
-        // bruker ascii escape codes til å gjøre tekst
+        // bruker ansi escape codes til å gjøre tekst
         // output farget ved farge 33m som er rød og 0m
         // som resetter fargen til konsollens default
         System.out.println(String.format("\033[31m[Error]\033[0m   line: %3s | %s", this.line_num, msg));
@@ -38,11 +38,24 @@ public class Legesystem{
     }
 
 
-    private void lesPasient(String[] args) {
+    public String[] hentLegeNavn() {
+        String[] navn = new String[this.leger.stoerrelse()];
+        
+        int indeks = 0;
+        for (Lege lege: this.leger) {
+            navn[indeks] = lege.hentNavn();
+            indeks++;
+        }
+
+        return navn;
+    }
+
+
+    public void leggTilPasient(String[] args) {
         this.pasienter.leggTil(new Pasient(args[0], args[1]));
     }
 
-    public void lesLegemiddel(String[] args) {
+    public void leggTilLegemiddel(String[] args) {
         // henter middel_type fra andre linje argument
         String middel_type = args[1];
 
@@ -60,10 +73,10 @@ public class Legesystem{
         // tillate == operatoren hvis begge objektene er
         // en laget som en String men her bruker vi args
         // som er en String[] array og hvert element ligger
-        // i minne som en char[] så hvis vi prøver å bruke
+        // i minne som en char[] så hvis vi prøver å bruke
         // == operatoren blir det som å gjøre skjekke om
         // String == char[] som ikke vil gi true uansett
-        // char[] sitt innhold.
+        // char[] sitt innhold.
 
         // [!] dette prinsippet vil gjentas i de neste metodene
 
@@ -94,7 +107,17 @@ public class Legesystem{
         }
     }
 
-    public void lesLege(String[] args) {
+    public void leggTilLege(String[] args) {
+        // skjekk om noen navnet til den nye
+        // legen allerede hører til en lege
+        // i leger prioritetskoen 
+        for (Lege lege: this.leger) {
+            if (lege.hentNavn().equals(args[0])) {
+                errorMsg(String.format("Lege med navn %s eksisterer allerede", args[0]));
+                return;
+            }
+        }
+
         // hvis første argument er null så skal
         // legen være en standard lege mens hvis
         // første argument er en annen verdi så
@@ -109,7 +132,7 @@ public class Legesystem{
     }
 
 
-    public void lesResept(String[] args) {
+    public void leggTilResept(String[] args) {
         // hent lege navn som vi skal finne i listen
         String lege_navn = args[1];
 
@@ -119,7 +142,7 @@ public class Legesystem{
         Lege lege = null;
         for (Lege node: this.leger) {
             // String.equals() og ikke == operatoren
-            if (node.hentNavn().equals(lege_navn) == true) {
+            if (node.hentNavn().equals(lege_navn)) {
                 lege = node;
                 break;
             }
@@ -277,19 +300,19 @@ public class Legesystem{
                 try {
                     switch(this.type_gen) {
                         case "Pasienter":
-                            this.lesPasient(args);
+                            this.leggTilPasient(args);
                             break;
 
                         case "Legemidler":
-                            this.lesLegemiddel(args);
+                            this.leggTilLegemiddel(args);
                             break;
 
                         case "Leger":
-                            this.lesLege(args);
+                            this.leggTilLege(args);
                             break;
 
                         case "Resepter":
-                            this.lesResept(args);
+                            this.leggTilResept(args);
                             break;
                     }
                 }
@@ -385,6 +408,8 @@ public class Legesystem{
             // array
             System.out.println(String.format(string_format, (Object[])section));
         }
+
+        System.out.println();
     }
 
     public void legeTabell() {
