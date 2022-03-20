@@ -14,13 +14,14 @@ public abstract class Legemiddel {
     
     //lager konstuktør for legemiddler med parametrene navn, pris og virkestoff
     public Legemiddel(String navn, int pris, double virkestoff){
-
-        // impliserer hva parameterene er i den nåværende istansene 
+        // lagrer instansevariabler 
         this.navn = navn;
         this.pris = pris;
         this.virkestoff = virkestoff;
 
-        //øker id med en for hver gang det blir laget et legemiddel objekt
+        // lagrer id_counter som verdi og øker id_counter
+        // med en for neste object som skal lages slik at
+        // hvert objekt vil ha en unik id
         this.id = id_counter;
         id_counter++;
     }
