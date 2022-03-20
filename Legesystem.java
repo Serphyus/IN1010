@@ -277,7 +277,7 @@ public class Legesystem{
                 try {
                     if (this.type_gen == null) {
                         this.errorMsg("ingen generator type valgt");
-                        System.exit(1); //////////////////////////////////////////
+                        System.exit(1);
                     }
 
                     // bruker ikke switch case her for å unngå
