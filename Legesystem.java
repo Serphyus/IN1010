@@ -471,6 +471,7 @@ public class Legesystem{
             index++;
         }
 
+        // print en tabell av lege dataen
         tabellerData(keys, lege_data);
     }
 
