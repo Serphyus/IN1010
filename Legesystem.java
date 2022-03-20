@@ -15,28 +15,43 @@ public class Legesystem{
     private int line_num = 0;
 
     // error counter
-    private static int err_count = 0;
+    private int err_count = 0;
+
+
+    // denne funksjonen er bare til å legge
+    // til linje nummeret hvis meldingen skjer
+    // mens en fil leses
+    public String formatMsg(String msg) {
+        if (line_num > 0) {
+            // hvis linje nummer ikke er på null
+            // så legger vi til linje nummeret i
+            // meldingen
+            msg = String.format("line: %3s | %s", this.line_num, msg);
+        }
+
+        return msg;
+    }
 
 
     public void debugMsg(String msg) {
         // bruker ansi escape codes til å gjøre tekst
         // output farget ved farge 34m som er blå og 0m
         // som resetter fargen til konsollens default
-        System.out.println(String.format("\033[34m[Debug]\033[0m   line: %3s | %s", this.line_num, msg));
+        System.out.println(String.format("\033[34m[Debug]\033[0m   | %s", formatMsg(msg)));
     }
 
     public void warningMsg(String msg) {
-        System.out.println(String.format("\033[33m[Warning]\033[0m %s", msg));
+        System.out.println(String.format("\033[33m[Warning]\033[0m | %s", formatMsg(msg)));
     }
 
     public void errorMsg(String msg) {
         // bruker ansi escape codes til å gjøre tekst
         // output farget ved farge 33m som er rød og 0m
         // som resetter fargen til konsollens default
-        System.out.println(String.format("\033[31m[Error]\033[0m   line: %3s | %s", this.line_num, msg));
-        err_count++;
-    }
 
+        System.out.println(String.format("\033[31m[Error]\033[0m   | %s", formatMsg(msg)));
+        this.err_count++;
+    }
 
     public String[] hentLegeNavn() {
         String[] navn = new String[this.leger.stoerrelse()];
@@ -195,7 +210,7 @@ public class Legesystem{
         // pasient med en matchende id og kan
         // gi en feilmelding
         if (pasient == null) {
-            this.errorMsg(String.format("no lege found with name: %s", pasient_id));
+            this.errorMsg(String.format("no pasient found with id: %s", pasient_id));
             return;
         }
 
@@ -242,16 +257,18 @@ public class Legesystem{
 
     public void lesFraFil(String filename){
         // reset error counter
-        err_count = 0;
+        this.err_count = 0;
 
         try {
+            this.debugMsg(String.format("Reading file: %s\n", filename));
+
             // lag et fil objekt og en scanner for å lese filen
             File data_fil = new File(filename);
             Scanner fil_leser = new Scanner(data_fil);
 
             // lag en linje nummer int for å vite hvilken linje
             // feil oppstår på
-            int line_num = 1;
+            this.line_num = 1;
             
             // loop gjennom linjene så lenge det filen har en neste linje
             while (fil_leser.hasNextLine()) {
@@ -342,11 +359,16 @@ public class Legesystem{
             System.exit(1);
         }
 
+        // reset linje nummer til 0 slik
+        // at konsoll meldinger ikke legger
+        // til linjenummer i meldingen
+        this.line_num = 0;
+
         // hvis error count er mer enn 0 gi
         // en advarsel melding til brukeren
-        if (err_count > 0) {
+        if (this.err_count > 0) {
             System.out.println();
-            this.warningMsg(String.format("Errors occurred when reading file: %s", err_count));
+            this.warningMsg(String.format("Errors occurred when reading file: %s", this.err_count));
         }
     }
 
