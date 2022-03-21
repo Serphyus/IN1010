@@ -1,57 +1,44 @@
-public abstract class Legemiddel {
-    // gjør alle instanse variablene protected for
-    // å bare tillate at metoder brukes for å hente
-    // dem og private på id_counter fordi den skal
-    // bare has tilgang til her slik at ingen subklasser
-    // kan endre på den
+abstract public class Legemiddel {
+    static private int id_counter = 1;
     
-    protected String navn; 
-    protected int pris;
-    protected double virkestoff; 
+    private int Id;
+    private String navn;
+    private int pris;
+    private double virkestoff;
 
-    protected int id;
-    private static int id_counter = 1;
-    
-    //lager konstuktør for legemiddler med parametrene navn, pris og virkestoff
-    public Legemiddel(String navn, int pris, double virkestoff){
-        // lagrer instansevariabler 
+    public Legemiddel(String navn, int pris, double virkestoff) {
         this.navn = navn;
         this.pris = pris;
         this.virkestoff = virkestoff;
 
-        // lagrer id_counter som verdi og øker id_counter
-        // med en for neste object som skal lages slik at
-        // hvert objekt vil ha en unik id
-        this.id = id_counter;
+        this.Id = id_counter;
         id_counter++;
     }
 
-    //returnerer IDen til legemiddelet
-    public int hentId(){
-        return id;
+    public int hentId() {
+        return this.Id;
     }
 
-    //returnerer navnet til legemiddelet
-    public String hentNavn(){
-        return navn;
+    public String hentNavn() {
+        return this.navn;
     }
 
-    //returnerer prisen til legemiddelet
-    public int hentPris(){
-        return pris;
+    public int hentPris() {
+        return this.pris;
     }
 
-    //returnerer mengden av virkestoffet til legemiddelet
-    public double hentVirkestoff(){
-        return virkestoff;
+    public double hentVirkestoff() {
+        return this.virkestoff;
     }
-    //returnerer Den nye priset til legemiddelet
-    public int settNyPris(int nyPris){
-        return pris = nyPris;
+
+    public void settNyPris(int ny_pris) {
+        this.pris = ny_pris;
     }
-    
-    //returnerer all av informasjon for legemiddelet i en rydig måte
-    public String toString(){
-        return "Navn: "+navn +"\n"+ "ID: "+ id+"\n"+ "Pris: "+ pris+"\n"+ "Virkestoff: "+virkestoff;
+
+    public String toString() {
+        return String.format(
+            "Id: %s\nNavn: %s\nPris: %s\nVirkestoff: %s",
+            this.Id, this.navn, this.pris, this.virkestoff
+        );
     }
 }

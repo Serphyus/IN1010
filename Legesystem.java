@@ -593,7 +593,7 @@ public class Legesystem{
             // metode å kalle på 
             if (middel instanceof Narkotisk) {
                 Narkotisk narkotisk = (Narkotisk)middel;
-                middel_data[index][4] = String.valueOf(narkotisk.hentNarkotiskStyrke());
+                middel_data[index][4] = String.valueOf(narkotisk.hentStyrke());
             }
             
             // samme prinsipp som i narkotisk mens her
@@ -601,7 +601,7 @@ public class Legesystem{
             // hentVanedannendeStyrke
             else if (middel instanceof Vanedannende) {
                 Vanedannende vanedannende = (Vanedannende)middel;
-                middel_data[index][4] = String.valueOf(vanedannende.hentVanedannendeStyrke());
+                middel_data[index][4] = String.valueOf(vanedannende.hentStyrke());
             }
 
             // dette tilfelle er for vanlig legemiddler
@@ -620,8 +620,6 @@ public class Legesystem{
     }
 
     public void reseptTabell() {
-        //legemiddelNummer,legeNavn,pasientID,type,[reit]
-
         // keys for å lage data områder på toppen av tabellen
         String[] keys = {"Resept ID", "Lege Navn", "PasientId", "Type", "Reit"};
 
@@ -640,7 +638,7 @@ public class Legesystem{
             // i resept_data hos denne reseptet sin indeks
             resept_data[index][0] = String.valueOf(resept.hentId());
             resept_data[index][1] = resept.hentLege().hentNavn();
-            resept_data[index][2] = String.valueOf(resept.hentPasientId());
+            resept_data[index][2] = String.valueOf(resept.hentPasient().hentId());
             resept_data[index][3] = String.valueOf(resept.getClass());
             resept_data[index][4] = String.valueOf(resept.hentReit());
             // inkrementer til neste indeks

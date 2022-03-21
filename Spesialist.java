@@ -1,25 +1,18 @@
-// lager subklassen Spesialist som arver fra Lege
-// og implimenetere fra en interfacen Godkjenningsfritak
 public class Spesialist extends Lege implements Godkjenningsfritak {
-    // Legger til String variabel kontrollid
-    private String kontrollid;
+    private String kontrollId;
 
-    //lager konstuktør for Spesialist med parametrene lege som den arver fra lege + kontrollID
-    public Spesialist(String lege, String kontrollid) {
-        super(lege);
-        this.kontrollid = kontrollid;
+    public Spesialist(String navn, String kontrollId) {
+        super(navn);
+        this.kontrollId = kontrollId;
     }
-    //overskriver hentKontrollID med å returnere kontrollID
+
     @Override
     public String hentKontrollID() {
-        return kontrollid;
+        return kontrollId;
     }
-    
-    //returnerer all av informasjon for spesialist
+
     @Override
-    public String toString(){
-        return super.toString() + String.format("\nKontrollId: %s", kontrollid);
+    public String toString() {
+        return super.toString() + String.format("\nkontroll Id: %s", hentKontrollID());
     }
-    
-    
 }

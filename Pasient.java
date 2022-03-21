@@ -1,5 +1,5 @@
 public class Pasient {
-    private static int id_teller = 0;
+    private static int id_counter = 1;
 
     private int id;
     private String navn;
@@ -10,8 +10,8 @@ public class Pasient {
         this.navn = navn;
         this.foodselsdato = foodselsdato;
 
-        this.id = id_teller;
-        id_teller++;
+        this.id = id_counter;
+        id_counter++;
     }
 
     public String hentNavn() {
@@ -31,6 +31,8 @@ public class Pasient {
     }
 
     public String toString() {
-        return String.format("Navn: %s\nId: %s\nFoodselsdato: %s\nAntall: %s\n", this.navn, this.id, this.foodselsdato, this.resepter.stoerrelse());
+        return String.format("Navn: %s\nId: %s\nFoodselsdato: %s\nAntall: %s",
+            this.navn, this.id, this.foodselsdato, this.resepter.stoerrelse()
+        );
     }
 }
