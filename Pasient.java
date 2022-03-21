@@ -35,7 +35,7 @@ public class Pasient {
     }
 
     public String toString() {
-        return String.format("Navn: %s\nId: %s\nFoodselsdato: %s\nAntall: %s",
+        return String.format("Navn: %s\nId: %s\nFoodselsdato: %s\nResepter: %s",
             this.navn, this.id, this.foodselsdato, this.resepter.stoerrelse()
         );
     }
