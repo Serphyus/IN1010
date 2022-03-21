@@ -26,6 +26,10 @@ public class Pasient {
         return this.id;
     }
 
+    public Koe<Resept> hentResepter() {
+        return this.resepter;
+    }
+
     public void leggTilResept(Resept resept) {
         this.resepter.leggTil(resept);
     }
