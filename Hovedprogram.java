@@ -6,10 +6,14 @@ public class Hovedprogram {
     private static Legesystem legesystem = new Legesystem();
 
     private static void clearScreen() {
+        // bruker ansi escape codes for å fjerne
+        // tidliger innhold i terminalen
         System.out.print("\033[H\033[2J\033[3J");
     }
 
     private static void returnPrompt() {
+        // gir brukeren en prompt som godtar all
+        // input så lenge brukeren trykker enter
         System.out.println("\n[Press Enter To Return]\n");
         console_input.nextLine();
     }
@@ -153,10 +157,13 @@ public class Hovedprogram {
         int valg_indeks = brukerMeny("Hva slags legemiddel?", meny_valg)-1;
         String middel_type = meny_valg[valg_indeks];
         
+        // hent data for å lage en resept
         int middel_id = valgt_middel.hentId();
         String lege_navn = valgt_lege.hentNavn();
         int pasient_id = valgt_pasient.hentId();
 
+        // lag en reit som vil bli ignorert hvis middelet
+        // er militaer siden den har alltid 3 reit
         int reit = 0;
         if (!middel_type.equals("militaer")) {
             try {
@@ -300,6 +307,8 @@ public class Hovedprogram {
         // loop gjennom hver resept i legesystemet
         for (Resept resept: legesystem.hentResepter()) {
             Legemiddel middel = resept.hentLegemiddel();
+
+            // skjekker om middel sin klasse matcher middel_type
             if (middel.getClass().getSimpleName().equals(middel_type)) {
                 utskrevne++;
                 total_reit += resept.hentReit();
@@ -318,7 +327,6 @@ public class Hovedprogram {
         returnPrompt();
     }
 
-
     private static void vanedannendeStatistikk() {
         reseptStatistikk("Vanedannende");
     }
@@ -328,7 +336,106 @@ public class Hovedprogram {
     }
 
     private static void narkotikaMisbruk() {
-        // ................................
+        // midlertidig lister for å holde alle leger
+        // og pasienter knyttet til narkotiske legmiddler
+        Prioritetskoe<Lege> leger = new Prioritetskoe<>();
+        Koe<Pasient> pasienter = new Koe<>();
+        
+        for (Resept resept: legesystem.hentResepter()) {
+            if (resept.hentLegemiddel() instanceof Narkotisk) {
+                // skjekk om lege eksisterer i leger listen
+                Lege ny_lege = resept.hentLege();
+                boolean lege_eksisterer = false;
+                for (Lege lege: leger) {
+                    if (ny_lege == lege) {
+                        lege_eksisterer = true;
+                        break;
+                    }
+                }
+
+                // hvis lege ikke eksisterer i listen legg den til
+                if (!lege_eksisterer) {
+                    leger.leggTil(ny_lege);
+                }
+
+                // skjekk om pasient eksisterer i leger listen
+                Pasient ny_paient = resept.hentPasient();
+                boolean pasient_eksisterer = false;
+                for (Pasient pasient: pasienter) {
+                    if (ny_paient == pasient) {
+                        pasient_eksisterer = true;
+                        break;
+                    }
+                }
+
+                // hvis pasient ikke eksisterer i listen legg den til
+                if (!pasient_eksisterer) {
+                    pasienter.leggTil(ny_paient);
+                }
+            }
+        }
+
+        // fjern tidligere innhold fra skjermen
+        clearScreen();
+
+        // definer indeks for å loope gjennom data
+        int indeks;
+
+        String[] lege_keys = {"Lege Navn", "Utskrevne Narkotisk"};
+        String[][] lege_data = new String[leger.stoerrelse()][2];
+
+        // hent alle leger med narkotisk
+        indeks = 0;
+        for (Lege lege: leger) {
+            lege_data[indeks][0] = lege.hentNavn();
+            
+            // tell antall narkotiske resepter som
+            // legen har skrevet ut
+            int antall_narkotiske = 0;
+            for (Resept resept: lege.utskrevneResepter()) {
+                if (resept.hentLegemiddel() instanceof Narkotisk) {
+                    antall_narkotiske++;
+                }
+            }
+
+            // lagre antall narkotiske legemiddler
+            // som legen har skrevet ut
+            lege_data[indeks][1] = String.valueOf(antall_narkotiske);
+
+            indeks++;
+        }
+
+        // tabeller lege data
+        legesystem.tabellerData(lege_keys, lege_data);
+
+        String[] pasient_keys = {"Pasient Navn", "Utskrevne Narkotisk"};
+        String[][] pasient_data = new String[pasienter.stoerrelse()][2];
+
+        // hent alle pasienter med narkotisk
+        indeks = 0;
+        for (Pasient pasient: pasienter) {
+            pasient_data[indeks][0] = pasient.hentNavn();
+            
+            // tell antall narkotiske resepter som
+            // pasienten har blitt utdelt
+            int antall_narkotiske = 0;
+            for (Resept resept: pasient.hentResepter()) {
+                if (resept.hentLegemiddel() instanceof Narkotisk) {
+                    antall_narkotiske++;
+                }
+            }
+
+            // lagre antall narkotiske legemiddler
+            // som pasienten har blitt utdelt
+            pasient_data[indeks][1] = String.valueOf(antall_narkotiske);
+            
+            indeks++;
+        }
+
+        // tabeller pasient data
+        legesystem.tabellerData(pasient_keys, pasient_data);
+
+        returnPrompt();
     }
 
 
@@ -352,7 +459,6 @@ public class Hovedprogram {
             case 3:
                 narkotikaMisbruk();
                 break;
-            
         }
     }
 
@@ -400,11 +506,3 @@ public class Hovedprogram {
         MainMenu();
     }
 }
-
-// Opprette og legge til nye elementer i systemet (deloppgave E4).
-
-// Bruke en gitt resept fra listen til en pasient (deloppgave E5).
-
-// Skrive ut forskjellige former for statistikk (deloppgave E6).
-
-// Skrive alle data til fil (deloppgave E7)
