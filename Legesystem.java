@@ -6,6 +6,7 @@ import java.util.Scanner;
 public class Legesystem{
     private Prioritetskoe<Lege> leger = new Prioritetskoe<>();
     private Koe<Pasient> pasienter = new Koe<>();
+    private Koe<Resept> resepter = new Koe<>();
     private Koe<Legemiddel> legemiddler = new Koe<>();
 
     // interne variabler for å holde styr
@@ -15,7 +16,7 @@ public class Legesystem{
     private int line_num = 0;
 
     // liste av gyldige type generatorer
-    private String[] gyldige_gens = {"pasient", "legemiddel", "lege", "resept"};
+    private String[] gyldige_gens = {"pasienter", "legemidler", "leger", "resepter"};
 
     // error counter
     private int err_count = 0;
@@ -122,6 +123,8 @@ public class Legesystem{
         } else {
             this.leger.leggTil(new Spesialist(navn, kontrollId));
         }
+
+        this.debugMsg(String.format("Lagt til ny lege: %s", navn));
     }
 
 
@@ -182,21 +185,28 @@ public class Legesystem{
 
         // sett reit før if statements for å unngå
         // udefinert lokal variabel error
-        
         // lag resept basert på type med legen
         try {
+            Resept resept = null;
             if (type.equals("hvit")) {
-                lege.skrivHvitResept(middel, pasient, reit);
+                resept = lege.skrivHvitResept(middel, pasient, reit);
             }
             else if (type.equals("blaa")) {
-                lege.skrivBlaaResept(middel, pasient, reit);
+                resept = lege.skrivBlaaResept(middel, pasient, reit);
             }
             else if (type.equals("militaer")) {
-                lege.skrivMilResept(middel, pasient);
+                resept = lege.skrivMilResept(middel, pasient);
             }
             else if (type.equals("p")) {
-                lege.skrivPResept(middel, pasient, reit);
-            }                            
+                resept = lege.skrivPResept(middel, pasient, reit);
+            }
+            else {
+                this.errorMsg(String.format("Ugyldig resept type: %s", type));
+                return;
+            }
+
+            this.resepter.leggTil(resept);
+            this.debugMsg(String.format("Lagt til ny resept for legemiddel: %s", middel.hentNavn()));
         }
 
         // hvis en ulovlig utskrift oppstår ta den imot
@@ -273,7 +283,6 @@ public class Legesystem{
                 // vi skal hontere argumentene på linjen basert
                 // på vår nåværende type gitt av forrige linje
                 // med '#' tegn
-
                 try {
                     if (this.type_gen == null) {
                         this.errorMsg("ingen generator type valgt");
@@ -290,7 +299,6 @@ public class Legesystem{
 
                         // legg til ny pasient i legesystemet
                         this.leggTilPasient(args[0], args[1]);
-                        break;
                     }
                     
                     else if (this.type_gen.equals("legemidler")) {
@@ -315,7 +323,6 @@ public class Legesystem{
 
                         // legg til ny legemiddel i legesystemet
                         this.leggTilLegemiddel(navn, type, pris, virkestoff, styrke);
-                        break;
                     }
                     
                     else if (this.type_gen.equals("leger")) {
@@ -326,14 +333,14 @@ public class Legesystem{
                         this.leggTilLege(args[0], args[1]);
                     }
 
-                    else if (this.type_gen.equals("Resepter")) {
+                    else if (this.type_gen.equals("resepter")) {
                         int middel_id = Integer.parseInt(args[0]);
                         String lege_navn = args[1];
                         int pasient_id = Integer.parseInt(args[2]);
                         String type = args[3];
                         
                         int reit = 0;
-                        if (type != "militaer") {
+                        if (!type.equals("militaer")) {
                             reit = Integer.parseInt(args[4]);
                         }
                         
@@ -347,6 +354,7 @@ public class Legesystem{
                 // å stoppe programmet for å kunne kjøre den store
                 // filen som skal inneholde noen feil
                 catch (IndexOutOfBoundsException e) {
+                    System.out.println(e);
                     this.errorMsg("data mangler argumenter");
                 }
 
@@ -375,7 +383,7 @@ public class Legesystem{
         // en advarsel melding til brukeren
         if (this.err_count > 0) {
             System.out.println();
-            this.warningMsg(String.format("det oppstod %s feil i lesing og antall feil som oppstod i parsing av fil: %s", this.err_count));
+            this.warningMsg(String.format("det oppstod %s feil i lesing og antall feil som oppstod i parsing av fil", this.err_count));
         }
     }
 
@@ -415,19 +423,19 @@ public class Legesystem{
         return pasient_array;
     }
 
-    public String[] hentPasientNavn() {
-        String[] navn = new String[this.leger.stoerrelse()];
-        
+    public Resept[] hentResepter() {
+        Resept[] resept_array = new Resept[this.resepter.stoerrelse()];
+
         int indeks = 0;
-        for (Lege lege: this.leger) {
-            navn[indeks] = lege.hentNavn();
+        for (Resept resept: this.resepter) {
+            resept_array[indeks] = resept;
             indeks++;
         }
 
-        return navn;
+        return resept_array;
     }
 
-    private void tabellerData(String[] keys, String[][] data) {
+    public void tabellerData(String[] keys, String[][] data) {
         int[] paddings = new int[keys.length];
 
         // regn ut mellomromet mellom hver av
@@ -455,7 +463,7 @@ public class Legesystem{
         // paddings verdiene til å sette mellomrom
         // mellom hvert argument som blir formattert
         // inn med String.format("...", arg1, arg2, ...)
-        String string_format = "";
+        String string_format = " ";
         for (int padding: paddings) {
             string_format += "%-"+ padding + "s  ";
         }
@@ -467,7 +475,7 @@ public class Legesystem{
         System.out.println(String.format(string_format, (Object[])keys));
         
         // print splitter
-        String split_line = "";
+        String split_line = " ";
         for (int p: paddings) {
             split_line += new String(new char[p+2]).replace("\0", "=");
         }
@@ -549,7 +557,7 @@ public class Legesystem{
             // pasient_data hos denne pasienten sin indeks
             pasient_data[index][0] = pasient.hentNavn();
             pasient_data[index][1] = pasient.hentFoodselsdato();
-            pasient_data[index][2] = String.format("%s", pasient.hentId());
+            pasient_data[index][2] = String.valueOf(pasient.hentId());
             index++;
         }
 
@@ -575,9 +583,9 @@ public class Legesystem{
             // hent diverse data om legemiddelet og lagre det
             // i middel_data hos denne middelet sin indeks
             middel_data[index][0] = middel.hentNavn();
-            middel_data[index][1] = String.format("%s", middel.hentId());
-            middel_data[index][2] = String.format("%s", middel.hentPris());
-            middel_data[index][3] = String.format("%s", middel.hentVirkestoff());
+            middel_data[index][1] = String.valueOf(middel.hentId());
+            middel_data[index][2] = String.valueOf(middel.hentPris());
+            middel_data[index][3] = String.valueOf(middel.hentVirkestoff());
             
             // hvis legemiddelet er narkotisk så må vi
             // type caste det slik at java compileren
@@ -585,7 +593,7 @@ public class Legesystem{
             // metode å kalle på 
             if (middel instanceof Narkotisk) {
                 Narkotisk narkotisk = (Narkotisk)middel;
-                middel_data[index][4] = String.format("%s", narkotisk.hentNarkotiskStyrke());
+                middel_data[index][4] = String.valueOf(narkotisk.hentNarkotiskStyrke());
             }
             
             // samme prinsipp som i narkotisk mens her
@@ -593,7 +601,7 @@ public class Legesystem{
             // hentVanedannendeStyrke
             else if (middel instanceof Vanedannende) {
                 Vanedannende vanedannende = (Vanedannende)middel;
-                middel_data[index][4] = String.format("%s", vanedannende.hentVanedannendeStyrke());
+                middel_data[index][4] = String.valueOf(vanedannende.hentVanedannendeStyrke());
             }
 
             // dette tilfelle er for vanlig legemiddler
@@ -609,5 +617,37 @@ public class Legesystem{
 
         // print en tabell av middel dataen
         tabellerData(keys, middel_data);
+    }
+
+    public void reseptTabell() {
+        //legemiddelNummer,legeNavn,pasientID,type,[reit]
+
+        // keys for å lage data områder på toppen av tabellen
+        String[] keys = {"Resept ID", "Lege Navn", "PasientId", "Type", "Reit"};
+
+        // lag en 2 dimensjonal liste som skal holde på
+        // hver eneste resept i resept_data[n] og
+        // i resept_data[n][0-4] skal den holde data om
+        // reseptet
+        String[][] resept_data = new String[this.resepter.stoerrelse()][5];
+
+        // start på indeks 0 og bruk den for å spesifisere
+        // reseptet som dataen skal lagres til og puttets
+        // i en tabell senere
+        int index = 0;
+        for (Resept resept: this.resepter) {
+            // hent diverse data om reseptet og lagre det
+            // i resept_data hos denne reseptet sin indeks
+            resept_data[index][0] = String.valueOf(resept.hentId());
+            resept_data[index][1] = resept.hentLege().hentNavn();
+            resept_data[index][2] = String.valueOf(resept.hentPasientId());
+            resept_data[index][3] = String.valueOf(resept.getClass());
+            resept_data[index][4] = String.valueOf(resept.hentReit());
+            // inkrementer til neste indeks
+            index++;
+        }
+
+        // print en tabell av resept dataen
+        tabellerData(keys, resept_data);
     }
 }
