@@ -1,12 +1,15 @@
 import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.util.Scanner;
+
+import java.io.IOException;
+import java.io.FileNotFoundException;
 
 public class Legesystem{
     private Prioritetskoe<Lege> leger = new Prioritetskoe<>();
     private Koe<Pasient> pasienter = new Koe<>();
     private Koe<Resept> resepter = new Koe<>();
-    private Koe<Legemiddel> legemiddler = new Koe<>();
+    private Koe<Legemiddel> legemidler = new Koe<>();
 
     // interne variabler for å holde styr
     // på hvilken type som leses fra filen
@@ -62,7 +65,7 @@ public class Legesystem{
 
     public void leggTilLegemiddel(String navn, String type, int pris, double virkestoff, int styrke) {
         // lag Legemiddel basert på middel_type
-        // og legg det til i legemiddler koe.
+        // og legg det til i legemidler koe.
 
         // (String.equals(String) vs String == String)
         // her må vi bruke equals metoden istedenfor
@@ -75,19 +78,19 @@ public class Legesystem{
         // [!] dette prinsippet vil gjentas i de flere metoder
 
         if (type.equals("vanlig")) {
-            this.legemiddler.leggTil(
+            this.legemidler.leggTil(
                 new Vanlig(navn, pris, virkestoff)
             );
         }
         
         else if (type.equals("narkotisk")) {
-            this.legemiddler.leggTil(
+            this.legemidler.leggTil(
                 new Narkotisk(navn, pris, virkestoff, styrke)
             );
         }
         
         else if (type.equals("vanedannende")) {
-            this.legemiddler.leggTil(
+            this.legemidler.leggTil(
                 new Vanedannende(navn, pris, virkestoff, styrke)
             );
         }
@@ -146,11 +149,11 @@ public class Legesystem{
             return;
         }
 
-        // loop gjennom legemiddler til man finner en legemiddel
+        // loop gjennom legemidler til man finner en legemiddel
         // som har en id som matcher middel_id parameteret ellers
         // sendes det en feilmelding.
         Legemiddel middel = null;
-        for (Legemiddel node: this.legemiddler) {
+        for (Legemiddel node: this.legemidler) {
             if (node.hentId() == middel_id) {
                 middel = node;
                 break;
@@ -388,11 +391,145 @@ public class Legesystem{
         }
     }
 
+    public void lagreSystem(String filename) {
+        File fil = new File(filename);
+        
+        try {
+            // prøv å lage filen
+            fil.createNewFile();
+            
+            // lag et FileWriter objekt
+            FileWriter fil_skriver = new FileWriter(fil);
+
+            // lagre pasient seksjon indikator
+            fil_skriver.write("# Pasienter\n");
+
+            // lagre hver pasient i legesystemet
+            for (Pasient pasient: this.pasienter) {
+                // hent data
+                String navn = pasient.hentNavn();
+                String dato = pasient.hentFoodselsdato();
+
+                // lagre data
+                fil_skriver.write(String.format("%s,%s\n", navn, dato));
+            }
+
+
+            // lagre legemiddel seksjon indikator
+            fil_skriver.write("# Legemidler\n");
+            
+            // lagre hver legemiddel i legesystemet
+            for (Legemiddel middel: this.legemidler) {
+                // hent data
+                String navn = middel.hentNavn();
+                String type = middel.getClass().getSimpleName().toLowerCase();
+                String pris = String.valueOf(middel.hentPris());
+                String virkestoff = String.valueOf(middel.hentVirkestoff());
+                
+                String data = String.format("%s,%s,%s,%s", navn, type, pris, virkestoff);
+                
+                // legg til styrke hvis middel er narkotisk
+                if (middel instanceof Narkotisk) {
+                    data += String.format(",%s", String.valueOf(((Narkotisk) middel).hentStyrke()));
+                }
+                
+                // legg til styrke hvis middel er vanedannende
+                else if (middel instanceof Vanedannende) {
+                    data += String.format(",%s", String.valueOf(((Vanedannende) middel).hentStyrke()));
+                }
+
+                // skriv data
+                fil_skriver.write(data + "\n");
+            }
+
+
+            // lagre legemiddel seksjon indikator
+            fil_skriver.write("# Leger\n");
+
+            // lagre hver lege i legesystemet
+            for (Lege lege: this.leger) {
+                // hent data
+                String navn = lege.hentNavn();
+                
+                // hent kontroll id som er 0 for vanlige leger
+                String id = "0";
+                if (lege instanceof Spesialist) {
+                    id = ((Spesialist) lege).hentKontrollID();
+                }
+
+                // skriv data
+                fil_skriver.write(String.format("%s,%s\n", navn, id));
+            }
+
+
+            // lagre legemiddel seksjon indikator
+            fil_skriver.write("# Resepter\n");
+
+            // lagre hver resept i legesystemet
+            for (Resept resept: this.resepter) {
+                // hent data
+                String middel_nummer = String.valueOf(resept.hentLegemiddel().hentId());
+                String lege_navn = String.valueOf(resept.hentLege().hentNavn());
+                String pasient_id = String.valueOf(resept.hentPasient().hentId());
+                
+                // hent type
+                String type = "";
+                
+                if (resept instanceof MilResept) {
+                    type = "militaer";
+                }
+
+                else if (resept instanceof PResept) {
+                    type = "p";
+                }
+                
+                else if (resept instanceof HvitResept) {
+                    type = "hvit";
+                }
+
+                else if (resept instanceof BlaaResept) {
+                    type = "blaa";
+                }
+
+                String data = String.format("%s,%s,%s,%s", middel_nummer, lege_navn, pasient_id, type);
+                
+                // lagre resepter som ikke er milresept med reit
+                if (!(resept instanceof MilResept)) {
+                    data += String.format(",%s", resept.hentReit());
+                }
+
+                // skriv data
+                fil_skriver.write(data + "\n");
+            }
+
+            // lukk filen
+            fil_skriver.close();
+        }
+        
+        catch (IOException e) {
+            this.errorMsg(String.format("Klarer ikke lagre data til %s", filename));
+            return;
+        }
+
+    }
+    
+    public Pasient[] hentPasienter() {
+        Pasient[] pasient_array = new Pasient[this.pasienter.stoerrelse()];
+
+        int indeks = 0;
+        for (Pasient pasient: this.pasienter) {
+            pasient_array[indeks] = pasient;
+            indeks++;
+        }
+
+        return pasient_array;
+    }
+
     public Legemiddel[] hentLegemiddler() {
-        Legemiddel[] middle_array = new Legemiddel[this.legemiddler.stoerrelse()];
+        Legemiddel[] middle_array = new Legemiddel[this.legemidler.stoerrelse()];
         
         int indeks = 0;
-        for (Legemiddel middel: this.legemiddler) {
+        for (Legemiddel middel: this.legemidler) {
             middle_array[indeks] = middel;
             indeks++;
         }
@@ -410,18 +547,6 @@ public class Legesystem{
         }
 
         return lege_array;
-    }
-
-    public Pasient[] hentPasienter() {
-        Pasient[] pasient_array = new Pasient[this.pasienter.stoerrelse()];
-
-        int indeks = 0;
-        for (Pasient pasient: this.pasienter) {
-            pasient_array[indeks] = pasient;
-            indeks++;
-        }
-
-        return pasient_array;
     }
 
     public Resept[] hentResepter() {
@@ -575,13 +700,13 @@ public class Legesystem{
         // hver eneste legemiddel i middel_data[n] og
         // i middel_data[n][0-4] skal den holde data om
         // legemiddelet
-        String[][] middel_data = new String[this.legemiddler.stoerrelse()][6];
+        String[][] middel_data = new String[this.legemidler.stoerrelse()][6];
 
         // start på indeks 0 og bruk den for å spesifisere
         // legemiddelet som dataen skal lagres til og puttets
         // i en tabell senere
         int index = 0;
-        for (Legemiddel middel: this.legemiddler) {
+        for (Legemiddel middel: this.legemidler) {
             // hent diverse data om legemiddelet og lagre det
             // i middel_data hos denne middelet sin indeks
             middel_data[index][0] = middel.hentNavn();
@@ -607,7 +732,7 @@ public class Legesystem{
                 middel_data[index][5] = String.valueOf(vanedannende.hentStyrke());
             }
 
-            // dette tilfelle er for vanlig legemiddler
+            // dette tilfelle er for vanlig legemidler
             // og de har ingen styrke så vi setter en
             // tom string som styrke data
             else {

@@ -462,15 +462,21 @@ public class Hovedprogram {
         }
     }
 
+    private static void lagreLegesystem() {
+        String filnavn = brukerInput("Filnavn: ");
+        legesystem.lagreSystem(filnavn);
+    }
+
     private static void MainMenu() {
         while (true) {
             clearScreen();
             
             String[] meny_valg = {
-                "Print Legesystem",
-                "Legg til nytt element",
-                "Bruk resept",
-                "Statistikk",
+                "vis legesystem",
+                "legg til nytt element",
+                "bruk resept",
+                "statistikk",
+                "lagre legesystem",
                 "Exit"
             };
             
@@ -490,13 +496,22 @@ public class Hovedprogram {
                     visStatistikk();
                     break;
                 case 5:
+                    lagreLegesystem();
+                    break;
+                
+                case 6:
                     System.exit(0);
             }
         }
     }
 
     public static void main(String[] args) {
-        clearScreen();        
+        if (args.length == 0) {
+            legesystem.errorMsg("mangler fil argumenter");
+            System.exit(1);
+        }
+        
+        clearScreen();
         for (String arg: args) {
             legesystem.lesFraFil(arg);
             returnPrompt();
