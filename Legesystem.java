@@ -249,8 +249,10 @@ public class Legesystem{
                 // linje. typen står på index 1 etter å splitte
                 // linjen -> {"#", "TYPE", ... }
                 if (line.charAt(0) == '#') {
+                    // gjør ny type om til lowercase
                     String new_type_gen = line.split(" ")[1].toLowerCase();
 
+                    // skjekk om den nye typen er en gyldig type
                     boolean gyldig_type = false;
                     for (String gen_type: this.gyldige_gens) {
                         if (new_type_gen.equals(gen_type)) {
@@ -382,7 +384,7 @@ public class Legesystem{
         // en advarsel melding til brukeren
         if (this.err_count > 0) {
             System.out.println();
-            this.warningMsg(String.format("det oppstod %s feil i lesing og antall feil som oppstod i parsing av fil", this.err_count));
+            this.warningMsg(String.format("det oppstod %s feil i lesing og parsing av fil", this.err_count));
         }
     }
 
@@ -498,12 +500,12 @@ public class Legesystem{
 
     public void legeTabell() {
         // keys for å lage data områder på toppen av tabellen
-        String[] keys = {"Lege Navn", "Resepter", "ID"};
+        String[] keys = {"Lege Navn", "Resepter", "Type", "KontrollID"};
 
         // lag en 2 dimensjonal liste som skal holde på hver
         // eneste lege i lege_data[n] og i lege_data[n][0-4]
         // skal den holde data om lege
-        String[][] lege_data = new String[this.leger.stoerrelse()][3];
+        String[][] lege_data = new String[this.leger.stoerrelse()][5];
 
         // start på indeks 0 og bruk den for å spesifisere
         // legen som dataen skal lagres til og puttets
@@ -513,7 +515,8 @@ public class Legesystem{
             // hent diverse data om legen og lagre det i
             // lege_data hos denne legen sin indeks
             lege_data[index][0] = lege.hentNavn();
-            lege_data[index][1] = String.format("%s", lege.utskrevneResepter().antall);
+            lege_data[index][1] = String.valueOf(lege.utskrevneResepter().antall);
+            lege_data[index][2] = lege.getClass().getSimpleName();
             
             // hvis legen er en spesialist så må vi
             // type caste det slik at java compileren
@@ -521,14 +524,14 @@ public class Legesystem{
             // metode å kalle på 
             if (lege instanceof Spesialist) {
                 Spesialist spesialist = (Spesialist)(lege);
-                lege_data[index][2] = spesialist.hentKontrollID();
+                lege_data[index][3] = spesialist.hentKontrollID();
             } 
             
             // hvis ikke legen er en spesialist setter
             // vi kontroll id til en blank verdi siden
             // vanlige leger har ikke kontroll id 
             else {
-                lege_data[index][2] = "";
+                lege_data[index][3] = "";
             }
             index++;
         }
@@ -539,7 +542,7 @@ public class Legesystem{
 
     public void pasientTabell() {
         // keys for å lage data områder på toppen av tabellen
-        String[] keys = {"Pasient Navn", "Foodselsdato", "ID"};
+        String[] keys = {"Pasient Navn", "ID", "Foodselsdato"};
 
         // lag en 2 dimensjonal liste som skal holde på
         // hver eneste pasient i pasient_data[n] og i
@@ -555,8 +558,8 @@ public class Legesystem{
             // hent diverse data om pasienten og lagre det i
             // pasient_data hos denne pasienten sin indeks
             pasient_data[index][0] = pasient.hentNavn();
-            pasient_data[index][1] = pasient.hentFoodselsdato();
-            pasient_data[index][2] = String.valueOf(pasient.hentId());
+            pasient_data[index][1] = String.valueOf(pasient.hentId());
+            pasient_data[index][2] = pasient.hentFoodselsdato();
             index++;
         }
 
@@ -566,13 +569,13 @@ public class Legesystem{
 
     public void middlerTabell() {
         // keys for å lage data områder på toppen av tabellen
-        String[] keys = {"Legemiddel Navn", "ID", "Pris", "Virkestoff", "Styrke"};
+        String[] keys = {"Legemiddel Navn", "Type", "ID", "Pris", "Virkestoff", "Styrke"};
 
         // lag en 2 dimensjonal liste som skal holde på
         // hver eneste legemiddel i middel_data[n] og
         // i middel_data[n][0-4] skal den holde data om
         // legemiddelet
-        String[][] middel_data = new String[this.legemiddler.stoerrelse()][5];
+        String[][] middel_data = new String[this.legemiddler.stoerrelse()][6];
 
         // start på indeks 0 og bruk den for å spesifisere
         // legemiddelet som dataen skal lagres til og puttets
@@ -582,9 +585,10 @@ public class Legesystem{
             // hent diverse data om legemiddelet og lagre det
             // i middel_data hos denne middelet sin indeks
             middel_data[index][0] = middel.hentNavn();
-            middel_data[index][1] = String.valueOf(middel.hentId());
-            middel_data[index][2] = String.valueOf(middel.hentPris());
-            middel_data[index][3] = String.valueOf(middel.hentVirkestoff());
+            middel_data[index][1] = middel.getClass().getSimpleName();
+            middel_data[index][2] = String.valueOf(middel.hentId());
+            middel_data[index][3] = String.valueOf(middel.hentPris());
+            middel_data[index][4] = String.valueOf(middel.hentVirkestoff());
             
             // hvis legemiddelet er narkotisk så må vi
             // type caste det slik at java compileren
@@ -592,7 +596,7 @@ public class Legesystem{
             // metode å kalle på 
             if (middel instanceof Narkotisk) {
                 Narkotisk narkotisk = (Narkotisk)middel;
-                middel_data[index][4] = String.valueOf(narkotisk.hentStyrke());
+                middel_data[index][5] = String.valueOf(narkotisk.hentStyrke());
             }
             
             // samme prinsipp som i narkotisk mens her
@@ -600,14 +604,14 @@ public class Legesystem{
             // hentVanedannendeStyrke
             else if (middel instanceof Vanedannende) {
                 Vanedannende vanedannende = (Vanedannende)middel;
-                middel_data[index][4] = String.valueOf(vanedannende.hentStyrke());
+                middel_data[index][5] = String.valueOf(vanedannende.hentStyrke());
             }
 
             // dette tilfelle er for vanlig legemiddler
             // og de har ingen styrke så vi setter en
             // tom string som styrke data
             else {
-                middel_data[index][4] = "";
+                middel_data[index][5] = "";
             }
             
             // inkrementer til neste indeks
