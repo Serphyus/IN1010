@@ -1,10 +1,10 @@
 public class Pasient {
     private static int id_teller = 0;
 
-    public int id;
-    public String navn;
-    public String foodselsdato;
-    public Koe<Resept> resepter = new Koe<>();
+    private int id;
+    private String navn;
+    private String foodselsdato;
+    private Koe<Resept> resepter = new Koe<>();
 
     public Pasient(String navn, String foodselsdato) {
         this.navn = navn;
