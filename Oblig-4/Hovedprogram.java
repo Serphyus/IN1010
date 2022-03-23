@@ -59,11 +59,19 @@ public class Hovedprogram {
     }
 
     private static String brukerInput(String prompt) {
+        // start med en tom bruker imput
+        // og bare bryt while loopen hvis
+        // brukeren gir noe som input
         String bruker_input = "";
         while (bruker_input == "") {
             System.out.print("\n " + prompt);
             bruker_input = console_input.nextLine();
 
+            // hvis bruker sin input er tom bruker
+            // vi ansi escape codes for å returnere
+            // til hvor vi var i terminalen slik at
+            // man ikke beveger seg videre hvis
+            // input som brukeren gir er tom
             if (bruker_input == "") {
                 System.out.print("\033[2A");
             }
@@ -75,6 +83,7 @@ public class Hovedprogram {
     private static void listLegesystem() {
         clearScreen();
 
+        // print ut tabeller av data fra legesystemet
         legesystem.legeTabell();
         legesystem.pasientTabell();
         legesystem.middlerTabell();
@@ -152,10 +161,14 @@ public class Hovedprogram {
         // velg en pasient og hent den ut fra pasienter arrayen
         Pasient valgt_pasient = pasienter[brukerMeny("Velg pasient", alle_pasient_navn)];
  
-        // lag en valg meny for å velge resept type
+        // lag en array av resept valg
         String[] meny_valg = {"hvit", "blaa", "militaer", "p"};
-        int valg_indeks = brukerMeny("Hva slags legemiddel?", meny_valg)-1;
-        String middel_type = meny_valg[valg_indeks];
+        
+        // la brukeren velge en av meny valgene
+        int valg_indeks = brukerMeny("Hva slags resept?", meny_valg)-1;
+
+        // hent resept typen fra valget vi gjorde i menyen
+        String resept_type = meny_valg[valg_indeks];
         
         // hent data for å lage en resept
         int middel_id = valgt_middel.hentId();
@@ -165,23 +178,32 @@ public class Hovedprogram {
         // lag en reit som vil bli ignorert hvis middelet
         // er militaer siden den har alltid 3 reit
         int reit = 0;
-        if (!middel_type.equals("militaer")) {
+        if (!resept_type.equals("militaer")) {
             try {
                 reit = Integer.parseInt(brukerInput("Reit: "));
             }
             
+            // hvis reit ikke er i integer format gi brukeren
+            // en feil. dette kan gjøres annerledes fordi her
+            // gir vi feil for så å returnere til start meny
+            // mens det som burde gjøres er å fortsette å spørre
+            // brukeren til de gir en gyldig verdi.
             catch (NumberFormatException e) {
                 legesystem.errorMsg(String.format("Ugyldig data format til bruker input"));
             }
         }
 
-        legesystem.leggTilResept(middel_id, lege_navn, pasient_id, middel_type, reit);
+        legesystem.leggTilResept(middel_id, lege_navn, pasient_id, resept_type, reit);
     }
 
     private static void leggTilNyLegemiddel() {
-        // velg legemiddel type
+        // lag en array av legemiddel valg 
         String[] meny_valg = {"vanlig", "vanedannende", "narkotisk"};
+        
+        // la brukeren velge en av meny valgene
         int middel_type_indeks = brukerMeny("Hva slags legemiddel?", meny_valg);
+        
+        // hent middel typen fra valget vi gjorde i menyen
         String middel_type = meny_valg[middel_type_indeks-1];
         
         try {
@@ -440,6 +462,7 @@ public class Hovedprogram {
 
 
     private static void visStatistikk() {
+        // lag en array med statistikk valg
         String[] meny_valg = {
             "Vanedannende legemidler",
             "Narkotiske legemidler",
@@ -447,6 +470,7 @@ public class Hovedprogram {
             "Tilbake"
         };
 
+        // få valg av bruker
         int choice = brukerMeny("Vis statistikk", meny_valg);
 
         switch (choice) {
@@ -463,14 +487,21 @@ public class Hovedprogram {
     }
 
     private static void lagreLegesystem() {
+        // spør bruker om filnavn
         String filnavn = brukerInput("Filnavn: ");
+
+        // lagre legesystemet til en fil
         legesystem.lagreSystem(filnavn);
+        
+        returnPrompt();
     }
 
     private static void MainMenu() {
+        // gjenta dette helt til brukeren velger exit
         while (true) {
             clearScreen();
             
+            // lag en array av hovedmeny valg
             String[] meny_valg = {
                 "vis legesystem",
                 "legg til nytt element",
@@ -480,6 +511,7 @@ public class Hovedprogram {
                 "Exit"
             };
             
+            // få bruker input til å velge en meny
             int choice = brukerMeny("Hovedmeny", meny_valg);
 
             switch (choice) {
@@ -506,11 +538,14 @@ public class Hovedprogram {
     }
 
     public static void main(String[] args) {
+        // skjekk om filer er oppgitt som argumenter
         if (args.length == 0) {
             legesystem.errorMsg("mangler fil argumenter");
             System.exit(1);
         }
         
+        // loop gjennom hvert argument gitt og prøv
+        // å lese filen som er gitt i argumentet
         clearScreen();
         for (String arg: args) {
             legesystem.lesFraFil(arg);
@@ -518,6 +553,7 @@ public class Hovedprogram {
             clearScreen();
         }
 
+        // kall på hovedmenyen
         MainMenu();
     }
 }

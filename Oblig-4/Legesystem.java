@@ -502,6 +502,8 @@ public class Legesystem{
                 fil_skriver.write(data + "\n");
             }
 
+            this.debugMsg(String.format("data er lagret til fil: %s", filename));
+
             // lukk filen
             fil_skriver.close();
         }
