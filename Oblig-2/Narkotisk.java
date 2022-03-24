@@ -12,6 +12,6 @@ public class Narkotisk extends Legemiddel {
 
     @Override
     public String toString() {
-        return super.toString() + String.format("\nstyrke: %s", styrke);
+        return super.toString() + String.format("\nStyrke: %s", styrke);
     }
 }

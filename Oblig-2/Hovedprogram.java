@@ -24,7 +24,7 @@ public class Hovedprogram {
         System.out.println(lege2+"\n");
         System.out.println(resept2+"\n\n");
         
-        System.out.println("Vabedabbebde Legemiddel med BlaaResept");
+        System.out.println("Vanedannebde Legemiddel med BlaaResept");
         System.out.println("======================================");
         System.out.println(middel3+"\n");
         System.out.println(lege3+"\n");

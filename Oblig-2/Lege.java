@@ -10,6 +10,6 @@ public class Lege {
     }
 
     public String toString() {
-        return String.format("navn: %s", hentNavn());
+        return String.format("Navn: %s", hentNavn());
     }
 }

@@ -49,7 +49,7 @@ abstract public class Resept {
     }
 
     public String toString() {
-        return String.format("Id: %s\nlegemiddel: %s\nlege: %s\npasientId: %s\nreit: %s\nfarge: %s\nlegemiddel pris: %s\npris aa betale: %s", Id, middel.hentNavn(), lege.hentNavn(), pasientId, reit, farge(), middel.hentPris(), prisAaBetale());
+        return String.format("Id: %s\nLegemiddel: %s\nLege: %s\nPasientId: %s\nReit: %s\nFarge: %s\nPris: %s\nPris aa betale: %s", Id, middel.hentNavn(), lege.hentNavn(), pasientId, reit, farge(), middel.hentPris(), prisAaBetale());
     }
 
     abstract public String farge();
