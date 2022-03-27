@@ -159,7 +159,7 @@ public class Hovedprogram {
         }
 
         // velg en pasient og hent den ut fra pasienter arrayen
-        Pasient valgt_pasient = pasienter[brukerMeny("Velg pasient", alle_pasient_navn)];
+        Pasient valgt_pasient = pasienter[brukerMeny("Velg pasient", alle_pasient_navn)-1];
  
         // lag en array av resept valg
         String[] meny_valg = {"hvit", "blaa", "militaer", "p"};
