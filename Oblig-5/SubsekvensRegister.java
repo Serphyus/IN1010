@@ -59,16 +59,19 @@ public class SubsekvensRegister {
     }
 
 
+    // legger til en ny hashmap
     public void settInnHashMap(HashMap<String, Subsekvens> map){
         this.hashBeholder.add(map);
     }
 
 
+    // henter en hashmap fra en indeks i array listen av hashmaps
     public HashMap<String, Subsekvens> hentHashMap(int indeks) {
         return this.hashBeholder.get(indeks);
     }
     
 
+    // returnerer antall hashmaps i registeret
     public int antallHashMaps(){
         // returner størrelsen på array listen som inneholder hashmaps
         return this.hashBeholder.size();
