@@ -29,10 +29,10 @@ public class Oblig5Del1 {
         
         try {
             // lag en path til metadata filen ved å bruke mappe navnet
-            String fil_path = String.format("%s/metadata.csv", folder);
+            String meta_file_path = String.format("%s/metadata.csv", folder);
             
             // lag en scanner for å lese fra metadata.csv filen
-            Scanner meta_scanner = new Scanner(new File(fil_path));
+            Scanner meta_scanner = new Scanner(new File(meta_file_path));
 
             // looper så lenge metadata filen har en neste linje å lese av
             while (meta_scanner.hasNextLine()) {
@@ -75,10 +75,8 @@ public class Oblig5Del1 {
                     }
                 }
                 
-                // oppdaterer maks_sekvens etter å ha skjekket at enten
-                // det ikke var satt en maks_sekvens og at den var på
-                // null og eller at den nye sekvens variablen er har et
-                // større antall enn maks_sekvens
+                // endre maks_sekvens til sekvens hvis sekvens
+                // har et større antall en maks_sekvens
                 max_sekvens = sekvens;
             }
 
