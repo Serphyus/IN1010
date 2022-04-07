@@ -6,6 +6,7 @@ import java.util.Scanner;
 import java.io.FileNotFoundException;
 
 public class SubsekvensRegister {
+    // en liste beholder av hashmaps til registeret
     private ArrayList<HashMap<String, Subsekvens>> hashBeholder = new ArrayList<>();
 
     public static HashMap<String, Subsekvens> LesFil(String filnavn) {
