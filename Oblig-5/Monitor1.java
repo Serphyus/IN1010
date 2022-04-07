@@ -5,14 +5,14 @@ import java.util.concurrent.locks.ReentrantLock;
 
 public class Monitor1 {
     // lag et internt register
-    private SubsekvensRegister register = new SubsekvensRegister();
+    protected SubsekvensRegister register = new SubsekvensRegister();
     
     // lag en thread lock slik data ikke blir endret samtidig
     // hvor en thread leser en minne posisjon samtidig som en
     // annen thread skriver til minne posisjonen. denne locken
     // vil putte alle som ønsker selv å låse dem inn i en kø
     // og vente på sin tur til å selv låse den.
-    private Lock thread_lock = new ReentrantLock();
+    protected Lock thread_lock = new ReentrantLock();
 
     public static HashMap<String, Subsekvens> LesFil(String filnavn) {
         return SubsekvensRegister.LesFil(filnavn);
@@ -77,30 +77,7 @@ public class Monitor1 {
     }
     
     public HashMap<String, Subsekvens> mergeHashMaps(HashMap<String, Subsekvens> map1, HashMap<String, Subsekvens> map2) {
-        // grunnen til at denne må låses er at selv om
-        // den bare merger parameterene gitt så vil de
-        // hashmappene gitt i parameterene kunne blitt
-        // endret av en annen thread mens mergingen
-        // skjer som kan skape problemer.
-        
-        // lås thread locken
-        this.thread_lock.lock();
-
-        // lag en undefined hashmap som skal holde
-        // på en merget hashmap laget fra parameterene
-        HashMap<String, Subsekvens> merged;
-        
-        // legg til den nye hashmappen
-        try {
-            merged = this.register.mergeHashMaps(map1, map2);
-        }
-
-        // lås opp thread locken selv om noe går galt
-        finally {
-            this.thread_lock.unlock();
-        }
-        
-        return merged;
+        return this.register.mergeHashMaps(map1, map2);
     }
 
     public String toString() {

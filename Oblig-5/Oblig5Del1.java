@@ -4,7 +4,6 @@ import java.io.File;
 import java.util.Scanner;
 import java.io.FileNotFoundException;
 
-
 public class Oblig5Del1 {
     public static void main(String[] args) {
         // skjekker om antall argumenter gitt etter kommandoen 0:
