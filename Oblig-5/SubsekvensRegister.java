@@ -8,7 +8,6 @@ import java.io.FileNotFoundException;
 public class SubsekvensRegister {
     private ArrayList<HashMap<String, Subsekvens>> hashBeholder = new ArrayList<>();
 
-    
     public static HashMap<String, Subsekvens> LesFil(String filnavn) {
         // lag en tom hashmap til å holde subsekvenser
         HashMap<String, Subsekvens> fil_map = new HashMap<>();
@@ -58,25 +57,21 @@ public class SubsekvensRegister {
         return fil_map;
     }
 
-
     // legger til en ny hashmap
     public void settInnHashMap(HashMap<String, Subsekvens> map){
         this.hashBeholder.add(map);
     }
 
-
     // henter en hashmap fra en indeks i array listen av hashmaps
     public HashMap<String, Subsekvens> hentHashMap(int indeks) {
         return this.hashBeholder.get(indeks);
     }
-    
 
     // returnerer antall hashmaps i registeret
     public int antallHashMaps(){
         // returner størrelsen på array listen som inneholder hashmaps
         return this.hashBeholder.size();
     }
-
 
     public HashMap<String, Subsekvens> mergeHashMaps(HashMap<String, Subsekvens> map1, HashMap<String, Subsekvens> map2) {
         // vi lager et tredje hashmap for å ikke påvirke
@@ -106,7 +101,6 @@ public class SubsekvensRegister {
         // returner det hashmappet som inneholder merged key og values
         return merged;
     }
-
 
     public String toString() {
         // lag en output string som skal inneholde
