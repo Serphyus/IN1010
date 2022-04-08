@@ -12,7 +12,7 @@ public class Monitor2 extends Monitor1 {
         // låser thread locken
         this.thread_lock.lock();
 
-        // signaliser alle flette threads at de skal stoppe
+        // signaliser alle flette threads til å stoppe
         try {
             this.flettebar.signalAll();
         }
