@@ -1,5 +1,4 @@
 import java.util.HashMap;
-import java.util.Scanner;
 import java.util.concurrent.locks.Condition;
 
 public class Monitor2 extends Monitor1 {
