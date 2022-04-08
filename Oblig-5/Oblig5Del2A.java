@@ -23,13 +23,6 @@ public class Oblig5Del2A {
         // folder variable for å spesifisere test mappen
         String folder = args[0];
         
-        // lag et nytt monitor objekt
-        Monitor1 monitor = new Monitor1();
-
-        // lag en array list som skal holde på alle threads som blir
-        // laget til å lese filer slik at man kan vente på at alle
-        // blir ferdig etter at de er startet
-        ArrayList<Thread> thread_pool = new ArrayList<>();
         
         try {
             // lag en path til metadata filen ved å bruke mappe navnet
@@ -37,16 +30,21 @@ public class Oblig5Del2A {
             
             // lag en scanner for å lese fra metadata.csv filen
             Scanner meta_scanner = new Scanner(new File(meta_file_path));
-
+            
+            // lag et nytt monitor objekt
+            Monitor1 monitor = new Monitor1();
+    
+            // lag en array list som skal holde på alle threads som blir
+            // laget til å lese filer slik at man kan vente på at alle
+            // blir ferdig etter at de er startet
+            ArrayList<Thread> thread_pool = new ArrayList<>();
+            
             // looper så lenge metadata filen har en neste linje å lese av
             while (meta_scanner.hasNextLine()) {
                 // les neste linje i metadata.csv filen som inneholder
                 // det neste filnavnet og lag en path til filen
                 String file_name = meta_scanner.nextLine();
                 String file_path = String.format("%s/%s", folder, file_name);
-                
-                // lag en thread som leser filen og oppdaterer
-                // monitoren sitt interne subsekvensregister
                 
                 // lag en ny thread som bruker en instanse av LeseTrad klassen
                 Thread new_thread = new Thread(new LeseTrad(file_path, monitor));

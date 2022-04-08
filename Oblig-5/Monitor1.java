@@ -12,7 +12,7 @@ public class Monitor1 {
     // annen thread skriver til minne posisjonen. denne locken
     // vil putte alle som ønsker selv å låse dem inn i en kø
     // og vente på sin tur til å selv låse den.
-    protected Lock thread_lock = new ReentrantLock();
+    protected Lock thread_lock = new ReentrantLock(true);
 
     public static HashMap<String, Subsekvens> LesFil(String filnavn) {
         return SubsekvensRegister.LesFil(filnavn);
