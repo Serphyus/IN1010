@@ -153,7 +153,6 @@ public class SubsekvensRegister {
         
         // bruk en indeks for å representere fil numer
         // og loop gjennom hver hashmap i array listen
-        int indeks = 1;
         for (HashMap<String, Subsekvens> map: this.hashBeholder) {
             // legg til hver subsekvens i hashmpappet
             // til stringen output
@@ -162,7 +161,6 @@ public class SubsekvensRegister {
             }
 
             output += "\n";
-            indeks++;
         }
 
         output += String.format("Stoerste %s\n", this.hentStoerste());

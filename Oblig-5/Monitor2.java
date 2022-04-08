@@ -54,7 +54,14 @@ public class Monitor2 extends Monitor1 {
                 this.flettebar.await();
             }
             
-            // merge alle interne hashmapper
+            // dette merger sammen alle hashmapper i registeret
+            //
+            // !WARNING!
+            // dette er ikke den riktige måten å gjøre det på fordi
+            // denne metoden skal egentlig hente ut 2 hashmaps som
+            // fjernes fra registeret og så låses threaden opp mens
+            // de merges og så låses det igjen når den skal legges
+            // tilbake. dette gjør merge komputasjonen parralellisert.
             this.mergeInternals();
         }
 
