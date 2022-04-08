@@ -43,6 +43,11 @@ public class Oblig5Del2B {
             // på at flere threads legges til
             monitor.aktiv_lesing = true;
             
+            // lag en flette thread som venter i bakgrunnen på
+            // at hashmaps blir lagt til og merger dem i registeret
+            Thread flette_trad = new Thread(new FletteTrad(monitor));
+            flette_trad.start();
+            
             // looper så lenge metadata filen har en neste linje å lese av
             while (meta_scanner.hasNextLine()) {
                 // les neste linje i metadata.csv filen som inneholder
@@ -71,14 +76,9 @@ public class Oblig5Del2B {
             // sett aktiv lesing til false siden alle lese
             // threads er ferdig med å lese filene
             monitor.aktiv_lesing = false;
-            
-            // lag en flette thread som venter i bakgrunnen på
-            // at hashmaps blir lagt til og merger dem i registeret
-            Thread flette_trad = new Thread(new FletteTrad(monitor));
-            flette_trad.start();
 
             // vent for flette threaden å bli ferdig
-            // flette_trad.join();
+            flette_trad.join();
 
             // print subsekvens monitoret
             System.out.println(monitor);

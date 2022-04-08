@@ -22,7 +22,6 @@ public class Monitor2 extends Monitor1 {
 
         // lås opp thread locken selv om noe går galt
         finally {
-            // this.flettebar.signal();
             this.thread_lock.unlock();
         }
     }
@@ -35,8 +34,7 @@ public class Monitor2 extends Monitor1 {
         this.thread_lock.lock();
         
         try {
-            if (this.antallHashMaps() > 2) {
-                // System.out.println(this.antallHashMaps());
+            if (this.antallHashMaps() < 2) {
                 this.flettebar.await();
             }
 
