@@ -23,6 +23,13 @@ public class Oblig5Del2A {
         // folder variable for å spesifisere test mappen
         String folder = args[0];
         
+        // lag et nytt monitor objekt
+        Monitor1 monitor = new Monitor1();
+
+        // lag en array list som skal holde på alle threads som blir
+        // laget til å lese filer slik at man kan vente på at alle
+        // blir ferdig etter at de er startet
+        ArrayList<Thread> thread_pool = new ArrayList<>();
         
         try {
             // lag en path til metadata filen ved å bruke mappe navnet
@@ -31,13 +38,6 @@ public class Oblig5Del2A {
             // lag en scanner for å lese fra metadata.csv filen
             Scanner meta_scanner = new Scanner(new File(meta_file_path));
             
-            // lag et nytt monitor objekt
-            Monitor1 monitor = new Monitor1();
-    
-            // lag en array list som skal holde på alle threads som blir
-            // laget til å lese filer slik at man kan vente på at alle
-            // blir ferdig etter at de er startet
-            ArrayList<Thread> thread_pool = new ArrayList<>();
             
             // looper så lenge metadata filen har en neste linje å lese av
             while (meta_scanner.hasNextLine()) {
@@ -58,30 +58,31 @@ public class Oblig5Del2A {
             
             // lukk scanner objektet
             meta_scanner.close();
-
-            // bruk Thread.join() metoden for å vente på
-            // at alle theads blir ferdig med å lese filene
-            for (Thread thread: thread_pool) {
-                thread.join();
-            }
-
-            // Merge sammen alle interne hashmapper
-            monitor.mergeInternals();
-            
-            // print subsekvens monitoret
-            System.out.println(monitor);
         }
-
+        
         // gi feilmelding hvis metadata filen ikke ble funnet og exit programmet
         catch (FileNotFoundException e) {
             System.err.println(String.format("Error: unable to locate %s/metadata.csv", folder));
             System.exit(1);
         }
-
+        
+        // bruk Thread.join() metoden for å vente på
+        // at alle theads blir ferdig med å lese filene
+        try {
+            for (Thread thread: thread_pool) {
+                thread.join();
+            }
+        } 
         // gi feilmelding hvis brukeren velger å avbryte
         // programmet med ctrl+c mens det kjører
         catch (InterruptedException e) {
             System.err.print("Error: program was interrupted by user");
         }
+
+        // Merge sammen alle interne hashmapper
+        monitor.mergeInternals();
+        
+        // print subsekvens monitoret
+        System.out.println(monitor);
     }
 }

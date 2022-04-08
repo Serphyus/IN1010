@@ -5,6 +5,24 @@ public class Monitor2 extends Monitor1 {
     public Condition flettebar = this.thread_lock.newCondition();
     public Boolean aktiv_lesing = false;
 
+    public void finishMerge() {
+        // setter aktiv lesing til false
+        this.aktiv_lesing = false;
+        
+        // låser thread locken
+        this.thread_lock.lock();
+
+        // signaliser alle flette threads at de skal stoppe
+        try {
+            this.flettebar.signalAll();
+        }
+
+        // lås opp thread
+        finally {
+            this.thread_lock.unlock();
+        }
+    }
+
     @Override
     public void settInnHashMap(HashMap<String, Subsekvens> map){
         this.thread_lock.lock();
