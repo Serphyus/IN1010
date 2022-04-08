@@ -77,8 +77,30 @@ public class Monitor1 {
     }
     
     public HashMap<String, Subsekvens> mergeHashMaps(HashMap<String, Subsekvens> map1, HashMap<String, Subsekvens> map2) {
-        return this.register.mergeHashMaps(map1, map2);
+        return SubsekvensRegister.mergeHashMaps(map1, map2);
     }
+
+    public Subsekvens hentStoerste() {
+        // lag en undefined subsekvens som skal holde
+        // på den største subsekvensen fra registeret
+        Subsekvens stoerste;
+        
+        // lås thread locken
+        this.thread_lock.lock();
+
+        // hent registeret sin største subsekvens
+        try {
+            stoerste = this.register.stoersteSubsekvens();
+        }
+
+        // lås opp thread locken selv om noe går galt
+        finally {
+            this.thread_lock.unlock();
+        }
+
+        return stoerste;
+    }
+
 
     public String toString() {
         // lag en undefined String som skal holde

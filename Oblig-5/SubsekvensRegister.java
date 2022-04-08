@@ -74,7 +74,43 @@ public class SubsekvensRegister {
         return this.hashBeholder.size();
     }
 
-    public HashMap<String, Subsekvens> mergeHashMaps(HashMap<String, Subsekvens> map1, HashMap<String, Subsekvens> map2) {
+    public void fjernHashMap(int indeks) {
+        // fjerner en hashmap i array listen ved indeks paramteret
+        this.hashBeholder.remove(indeks);
+    }
+
+    public Subsekvens stoersteSubsekvens() {
+        HashMap<String, Subsekvens> merged = new HashMap<>();
+
+        // loop gjennom hver hashmap i registeret og merge
+        // dem sammen til et nytt hashmap
+        for (int i = 0; i < this.antallHashMaps(); i++) {
+            merged = mergeHashMaps(merged, this.hentHashMap(i));
+        }
+
+        // hold en variabel av største subsekvens
+        Subsekvens stoerste = null;
+
+        // loop gjennom alle subsekvenser i den merged hashmappen
+        for (Subsekvens sekvens: merged.values()) {
+
+            // skjekk om stoerste er null eller den nye
+            // sekvensen har et større antall enn stoerste
+            if (stoerste != null) {
+                if (sekvens.hentAntall() < stoerste.hentAntall()) {
+                    // hopp til neste hvis den nye sekvensen
+                    // hadde et mindre antall enn stoerste
+                    continue;
+                }
+            }
+            
+            // sett ny stoerste
+            stoerste = sekvens;
+        }
+        return stoerste;
+    }
+
+    public static HashMap<String, Subsekvens> mergeHashMaps(HashMap<String, Subsekvens> map1, HashMap<String, Subsekvens> map2) {
         // vi lager et tredje hashmap for å ikke påvirke
         // hashmap parameterene siden de er en referanse
         // til minne posisjoner og vil da endres for alt

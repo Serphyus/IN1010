@@ -1,5 +1,4 @@
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import java.io.File;
 import java.util.Scanner;
@@ -58,6 +57,9 @@ public class Oblig5Del2A {
                 // start den nye threaden og la den kjøre i bakgrunnen
                 new_thread.start();
             }
+            
+            // lukk scanner objektet
+            meta_scanner.close();
 
             // bruk Thread.join() metoden for å vente på
             // at alle theads blir ferdig med å lese filene
@@ -68,39 +70,8 @@ public class Oblig5Del2A {
             // print subsekvens monitoret
             System.out.println(monitor);
     
-            // lag en merged hashmap som skal brukes til å merge
-            // hvert hashmap i monitoret sammen til å finne antall
-            // forekomster av hver sekvens
-            HashMap<String, Subsekvens> merged = new HashMap<>();
-            
-            // loop gjennom hver hashmap og merge det med merged hashmappet
-            for (int i = 0; i < monitor.antallHashMaps(); i++) {
-                merged = monitor.mergeHashMaps(merged, monitor.hentHashMap(i));
-            }
-            
-            // hold en variabel av maks_sekvens 
-            Subsekvens max_sekvens = null;
-            
-            for (Subsekvens sekvens: merged.values()) {
-                // hvis maks_sekvens ikke er null og den nye sekvens
-                // variablen ikke har et større antall en max_sekvens
-                // sitt antall så hopper loopen til neste element
-                if (max_sekvens != null) {
-                    if (sekvens.hentAntall() < max_sekvens.hentAntall()) {
-                        continue;
-                    }
-                }
-                
-                // endre maks_sekvens til sekvens hvis sekvens
-                // har et større antall en maks_sekvens
-                max_sekvens = sekvens;
-            }
-
-            // print ut sekvensen som hadde høyest antall
-            System.out.println(max_sekvens);
-            
-            // lukk scanner objektet
-            meta_scanner.close();
+            // print ut subsekvensen med størst antall
+            System.out.println(monitor.hentStoerste());
         }
 
         // gi feilmelding hvis metadata filen ikke ble funnet og exit programmet

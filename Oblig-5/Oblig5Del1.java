@@ -47,43 +47,15 @@ public class Oblig5Del1 {
                 // legg til det leste hashmappet til registeret
                 register.settInnHashMap(file_map);
             }
-
-            // print subsekvens registeret
-            System.out.println(register);
-    
-            // lag en merged hashmap som skal brukes til å merge
-            // hvert hashmap i registeret sammen til å finne antall
-            // forekomster av hver sekvens
-            HashMap<String, Subsekvens> merged = new HashMap<>();
-            
-            // loop gjennom hver hashmap og merge det med merged hashmappet
-            for (int i = 0; i < register.antallHashMaps(); i++) {
-                merged = register.mergeHashMaps(merged, register.hentHashMap(i));
-            }
-            
-            // hold en variabel av maks_sekvens 
-            Subsekvens max_sekvens = null;
-            
-            for (Subsekvens sekvens: merged.values()) {
-                // hvis maks_sekvens ikke er null og den nye sekvens
-                // variablen ikke har et større antall en max_sekvens
-                // sitt antall så hopper loopen til neste element
-                if (max_sekvens != null) {
-                    if (sekvens.hentAntall() < max_sekvens.hentAntall()) {
-                        continue;
-                    }
-                }
-                
-                // endre maks_sekvens til sekvens hvis sekvens
-                // har et større antall en maks_sekvens
-                max_sekvens = sekvens;
-            }
-
-            // print ut sekvensen som hadde høyest antall
-            System.out.println(max_sekvens);
             
             // lukk scanner objektet
             meta_scanner.close();
+
+            // print subsekvens registeret
+            System.out.println(register);
+
+            // print ut subsekvensen med størst antall
+            System.out.println(register.stoersteSubsekvens());
         }
 
         // gi feilmelding hvis metadata filen ikke ble funnet og exit programmet
