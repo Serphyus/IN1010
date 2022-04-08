@@ -51,11 +51,11 @@ public class Oblig5Del1 {
             // lukk scanner objektet
             meta_scanner.close();
 
+            // Merge sammen alle interne hashmapper
+            register.mergeInternals();
+
             // print subsekvens registeret
             System.out.println(register);
-
-            // print ut subsekvensen med størst antall
-            System.out.println(register.stoersteSubsekvens());
         }
 
         // gi feilmelding hvis metadata filen ikke ble funnet og exit programmet

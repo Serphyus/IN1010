@@ -74,12 +74,7 @@ public class SubsekvensRegister {
         return this.hashBeholder.size();
     }
 
-    public void fjernHashMap(int indeks) {
-        // fjerner en hashmap i array listen ved indeks paramteret
-        this.hashBeholder.remove(indeks);
-    }
-
-    public Subsekvens stoersteSubsekvens() {
+    public Subsekvens hentStoerste() {
         HashMap<String, Subsekvens> merged = new HashMap<>();
 
         // loop gjennom hver hashmap i registeret og merge
@@ -108,6 +103,17 @@ public class SubsekvensRegister {
             stoerste = sekvens;
         }
         return stoerste;
+    }
+
+    public void mergeInternals() {
+        HashMap<String, Subsekvens> merged = new HashMap<>();
+
+        for (HashMap<String, Subsekvens> map: this.hashBeholder) {
+            merged = SubsekvensRegister.mergeHashMaps(merged, map);
+        }
+
+        this.hashBeholder.clear();
+        this.hashBeholder.add(merged);
     }
 
     public static HashMap<String, Subsekvens> mergeHashMaps(HashMap<String, Subsekvens> map1, HashMap<String, Subsekvens> map2) {
@@ -149,11 +155,6 @@ public class SubsekvensRegister {
         // og loop gjennom hver hashmap i array listen
         int indeks = 1;
         for (HashMap<String, Subsekvens> map: this.hashBeholder) {
-            
-            // loop gjennom hver sekvens String og subsekvens objekt
-            // i hashmapen og bruk subsekvens klassens toString metode
-            output += String.format("File %s\n", indeks);
-            
             // legg til hver subsekvens i hashmpappet
             // til stringen output
             for (String sekvens: map.keySet()) {
@@ -163,6 +164,8 @@ public class SubsekvensRegister {
             output += "\n";
             indeks++;
         }
+
+        output += String.format("Stoerste %s\n", this.hentStoerste());
         
         // returner kombinert output av alle hashmappene
         return output;

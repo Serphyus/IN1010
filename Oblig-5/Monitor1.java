@@ -14,10 +14,6 @@ public class Monitor1 {
     // og vente på sin tur til å selv låse den.
     protected Lock thread_lock = new ReentrantLock(true);
 
-    public static HashMap<String, Subsekvens> LesFil(String filnavn) {
-        return SubsekvensRegister.LesFil(filnavn);
-    }
-    
     public void settInnHashMap(HashMap<String, Subsekvens> map){
         // lås thread locken
         this.thread_lock.lock();
@@ -75,9 +71,9 @@ public class Monitor1 {
 
         return antall;
     }
-    
-    public HashMap<String, Subsekvens> mergeHashMaps(HashMap<String, Subsekvens> map1, HashMap<String, Subsekvens> map2) {
-        return SubsekvensRegister.mergeHashMaps(map1, map2);
+
+    public void mergeInternals() {
+        this.register.mergeInternals();
     }
 
     public Subsekvens hentStoerste() {
@@ -90,7 +86,7 @@ public class Monitor1 {
 
         // hent registeret sin største subsekvens
         try {
-            stoerste = this.register.stoersteSubsekvens();
+            stoerste = this.register.hentStoerste();
         }
 
         // lås opp thread locken selv om noe går galt
@@ -100,7 +96,6 @@ public class Monitor1 {
 
         return stoerste;
     }
-
 
     public String toString() {
         // lag en undefined String som skal holde

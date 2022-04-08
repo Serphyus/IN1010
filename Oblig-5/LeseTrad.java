@@ -14,7 +14,7 @@ public class LeseTrad implements Runnable {
     @Override
     public void run() {
         // les fil og lag et hashmap av Strings og Subsekvenser
-        HashMap<String, Subsekvens> fil_map = Monitor1.LesFil(this.filnavn);
+        HashMap<String, Subsekvens> fil_map = SubsekvensRegister.LesFil(this.filnavn);
 
         // legg til hashmappet som ble laget fra
         // filen til i monitoren sitt register

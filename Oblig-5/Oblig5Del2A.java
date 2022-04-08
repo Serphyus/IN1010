@@ -65,11 +65,11 @@ public class Oblig5Del2A {
                 thread.join();
             }
 
+            // Merge sammen alle interne hashmapper
+            monitor.mergeInternals();
+            
             // print subsekvens monitoret
             System.out.println(monitor);
-    
-            // print ut subsekvensen med størst antall
-            System.out.println(monitor.hentStoerste());
         }
 
         // gi feilmelding hvis metadata filen ikke ble funnet og exit programmet

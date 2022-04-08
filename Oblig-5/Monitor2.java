@@ -26,26 +26,18 @@ public class Monitor2 extends Monitor1 {
         }
     }
 
-    // jeg gjorde dette i en metode for å gjøre prosessen
-    // enklere fordi her inne i Monitor2 har jeg direkte
-    // tilgang til registeret og thread locken
     public void mergeHashMaps() {
         // lås thread locken
         this.thread_lock.lock();
         
         try {
+            // hvis antall hashmaps er minder enn 2 vent på signal
             if (this.antallHashMaps() < 2) {
                 this.flettebar.await();
             }
-
-            HashMap<String, Subsekvens> map1 = this.hentHashMap(0);
-            HashMap<String, Subsekvens> map2 = this.hentHashMap(1);
-
-            this.register.fjernHashMap(0);
-            this.register.fjernHashMap(0);
             
-            // legg til det mergede hashmappet til registeret
-            this.register.settInnHashMap(SubsekvensRegister.mergeHashMaps(map1, map2));
+            // merge alle interne hashmapper
+            this.mergeInternals();
         }
 
         catch (InterruptedException e) {
