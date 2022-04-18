@@ -7,5 +7,5 @@ all the code here will have to be moved to a private repository and your name wi
 this README.md file. So take my advice, just use this to understand the assignment and make your own code work.
 
 ### Credits for Oblig 4 (Group Project)
-- [Mohammad Fadel](https://raw.githubusercontent.com/Fadel-2000/Oblig-6/1d80c25aace5d4b06c94b93bba71d63adbf6bcf5/README.md)
+- Mohammad Fadel
 - Gabriel Cyrus
