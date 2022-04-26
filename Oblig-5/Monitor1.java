@@ -14,6 +14,10 @@ public class Monitor1 {
     // og vente på sin tur til å selv låse den.
     protected Lock thread_lock = new ReentrantLock(true);
 
+    public static HashMap<String, Subsekvens> lesFil(String filnavn) {
+        return SubsekvensRegister.lesFil(filnavn);
+    }
+
     public void settInnHashMap(HashMap<String, Subsekvens> map){
         // lås thread locken
         this.thread_lock.lock();
@@ -28,7 +32,6 @@ public class Monitor1 {
             this.thread_lock.unlock();
         }
     }
-    
     
     public HashMap<String, Subsekvens> hentHashMap(int indeks) {
         // låst thread locken

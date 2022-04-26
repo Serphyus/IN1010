@@ -9,7 +9,7 @@ public class SubsekvensRegister {
     // en liste beholder av hashmaps til registeret
     private ArrayList<HashMap<String, Subsekvens>> hashBeholder = new ArrayList<>();
 
-    public static HashMap<String, Subsekvens> LesFil(String filnavn) {
+    public static HashMap<String, Subsekvens> lesFil(String filnavn) {
         // lag en tom hashmap til å holde subsekvenser
         HashMap<String, Subsekvens> fil_map = new HashMap<>();
         

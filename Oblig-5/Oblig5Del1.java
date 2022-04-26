@@ -42,7 +42,7 @@ public class Oblig5Del1 {
                 
                 // les hashmappet fra en filnavnet som
                 // ble hentet ut av metadata filen
-                HashMap<String, Subsekvens> file_map = SubsekvensRegister.LesFil(file_path);
+                HashMap<String, Subsekvens> file_map = SubsekvensRegister.lesFil(file_path);
                 
                 // legg til det leste hashmappet til registeret
                 register.settInnHashMap(file_map);
