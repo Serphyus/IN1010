@@ -85,10 +85,12 @@ public class Labyrint {
     }
 
     public void settNaboer () {
-        // ####################################
-        // ####################################
-        // ####################################
-        // ####################################
+        // loop fra venstre øvre hjørne til høyre bunn og
+        // skjekk naboer på rutene, men siden vi beveger
+        // oss fra toppen i venstre til bunn i høyre trenger
+        // vi bare å sette nord og vest på ruten vi er på i
+        // loopen og nord/vest nodene sin sør/øst node blir
+        // den ruten vi er på i loopen
         for (int y = 1; y < this.height-1; y++) {
             for (int x = 1; x < this.width-1; x++) {
                 Rute rute = this.field[y][x];
@@ -106,14 +108,22 @@ public class Labyrint {
     }
 
     public ArrayList<Tuppel> finnUtveiFra (int y, int x) {
+        // reset alle used indikatorer i labyrinten som ble
+        // satt fra tidligere path findings
         this.reset_field();
 
+        // skjekk at (y,x) er inne i labyrinten
         if ((x > 0 || x < this.width) || (y > 0 || y < this.height)) {
+            
+            // lag en path array som skal holde på veien ut
             ArrayList<Tuppel> path = new ArrayList<>();
             
+            // hent start ruten og kall på dens finn metode
+            // for å finne en vei ut av labyrinten.
             Rute start = this.field[y][x];
             start.finn(null, path);
             
+            // returner path listen hvis det ble funnet en vei ut
             if (path.size() > 0) {
                 Tuppel end = path.get(path.size()-1);
                 if (end.finish) {
@@ -121,10 +131,13 @@ public class Labyrint {
                 }
             }
         }
+
+        // hvis ingen vei ut ble funnet så returnerer metoden null
         return null;
     }
 
     public void reset_field () {
+        // loop gjennom alle ruter og kall deres reset metode
         for (Rute[] rad : this.field) {
             for (Rute rute : rad) {
                 rute.reset();
@@ -133,6 +146,7 @@ public class Labyrint {
     }
 
     public String toString () {
+        // lager en visuell representasjon av labyrinten
         String output = "";
         for (Rute[] rad : this.field) {
             for (Rute rute : rad) {

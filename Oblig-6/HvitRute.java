@@ -10,31 +10,46 @@ public class HvitRute extends Rute {
 
     @Override
     public void finn (Rute fra, ArrayList<Tuppel> path) {
+        // skjekk om rute allerede er brukt
         if (this.used) {
             return;
         }
 
+        // sett used flag til true
         this.used = true;
 
+        // lag en ny tuppel og legg den til path
         Tuppel current = new Tuppel(this.y, this.x, false);
         path.add(current);
 
+        // lag en array av naboer som skal skjekkes for mulige veier
         Rute[] available = {this.nord, this.syd, this.vest, this.oest};
 
+        // loop gjennom hver eneste nabo og skjell om de er hvite
+        // og om de legger seg selv til etter å kalle finn metoden
         for (Rute neste : available) {
             if (neste != fra && neste != null) {
                 neste.finn(this, path);
+
+                // hvis den neste siste posisjonen er en
+                // finish posisjon så stopper finn metoden
+
                 if (path.get(path.size()-1).finish) {
                     return;
                 }
             }
         }
 
+        // hvis metoden når hit så var ingen av naboene en
+        // gyldig vei til utgangen og da fjerner ruten seg
+        // selv fra pathen slik at vi kan gå tilbake uten å
+        // beholde feilede forsøk i path arrayen
         path.remove(current);
     }
 
     @Override
     public void reset () {
+        // denne setter used indikatoren tilbake til false
         this.used = false;
     }
 

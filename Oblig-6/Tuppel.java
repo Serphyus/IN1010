@@ -6,6 +6,9 @@ public class Tuppel {
     public Tuppel(int y, int x, boolean finish) {
         this.y = y;
         this.x = x;
+
+        // finish brukes som en indikator for å si om
+        // denne posisjonen er en slutt posisjon.
         this.finish = finish;
     }
 

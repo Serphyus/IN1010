@@ -6,6 +6,9 @@ public class SortRute extends Rute {
         super(y, x, labyrint);
     }
 
+    // siden sort rute er en vegg skal ikke
+    // finn eller reset metode gjøre noe
+
     @Override
     public void finn (Rute fra, ArrayList<Tuppel> path) {}
 

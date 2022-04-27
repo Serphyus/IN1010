@@ -6,6 +6,7 @@ public abstract class Rute {
     protected int x;
     protected Labyrint labyrint;
     
+    // sett nabo noder | kanskje endre til final
     public Rute nord = null;
     public Rute syd = null;
     public Rute oest = null;
@@ -17,6 +18,7 @@ public abstract class Rute {
         this.labyrint = labyrint;
     }
 
+    // lag abstrakte metoder som må overskrives
     abstract public void finn (Rute fra, ArrayList<Tuppel> path);
     abstract public void reset ();
     abstract public String toString ();
