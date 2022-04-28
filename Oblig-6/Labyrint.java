@@ -136,6 +136,13 @@ public class Labyrint {
         return null;
     }
 
+    public void markPath(ArrayList<Tuppel> path) {
+        // marker alle ruter i path arraylisten
+        for (Tuppel pos : path) {
+            this.field[pos.y][pos.x].mark();
+        }
+    }
+
     public void reset_field () {
         // loop gjennom alle ruter og kall deres reset metode
         for (Rute[] rad : this.field) {

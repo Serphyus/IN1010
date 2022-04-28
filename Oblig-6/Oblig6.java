@@ -57,15 +57,21 @@ public class Oblig6 {
                     System.out.println(String.format("klarte ikke finne en vei fra (%s,%s)", y, x));
                 }
                 else {
-                    // print alle kordinatene i veien til utgangen
-                    for (Tuppel pos : path) {
-                        System.out.println(pos);
-                    }
+                    // marker hver rute i arraylisten path
+                    labyrint.markPath(path);
+
+                    // output labyrinten etter å ha markert den
+                    System.out.println(labyrint);
+
                 }
             }
 
             catch (NumberFormatException e) {
                 System.err.println("ugyldige nummere i input");
+            }
+
+            catch (ArrayIndexOutOfBoundsException e) {
+                System.err.println("kordinat finnes ikke i labyrinten");
             }
         }
     }

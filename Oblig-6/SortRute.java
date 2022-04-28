@@ -16,6 +16,9 @@ public class SortRute extends Rute {
     public void reset () {}
 
     @Override
+    public void mark() {}
+
+    @Override
     public String toString () {
         return String.format("##", this.x, this.y);
     }

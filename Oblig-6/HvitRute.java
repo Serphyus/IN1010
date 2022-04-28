@@ -3,6 +3,7 @@ import java.util.ArrayList;
 
 public class HvitRute extends Rute {
     private boolean used = false;
+    private boolean mark = false;
 
     public HvitRute (int y, int x, Labyrint labyrint) {
         super(y, x, labyrint);
@@ -33,7 +34,6 @@ public class HvitRute extends Rute {
 
                 // hvis den neste siste posisjonen er en
                 // finish posisjon så stopper finn metoden
-
                 if (path.get(path.size()-1).finish) {
                     return;
                 }
@@ -49,12 +49,24 @@ public class HvitRute extends Rute {
 
     @Override
     public void reset () {
-        // denne setter used indikatoren tilbake til false
+        // resetter used og mark verdiene til false
         this.used = false;
+        this.mark = false;
     }
 
     @Override
+    public void mark() {
+        // marker ruten slik at den vil printes med farge
+        this.mark = true;
+    }
+
+
+    @Override
     public String toString () {
+        if (this.mark) {
+            // hvis ruten er markert så blir den grønn
+            return "\033[42m  \033[0m";
+        }
         return "  ";
     }
 }
