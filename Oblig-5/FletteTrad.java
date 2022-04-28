@@ -7,7 +7,7 @@ public class FletteTrad implements Runnable {
 
     @Override
     public void run() {
-        while (this.monitor.aktiv_lesing || this.monitor.antallHashMaps() > 1) {
+        while (this.monitor.antallHashMaps() > 1) {
             this.monitor.mergeHashMaps();
         }
     }

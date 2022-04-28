@@ -68,6 +68,10 @@ public class SubsekvensRegister {
         return this.hashBeholder.get(indeks);
     }
 
+    public HashMap<String, Subsekvens> taUtHashMap(int indeks) {
+        return this.hashBeholder.remove(indeks);
+    }
+
     // returnerer antall hashmaps i registeret
     public int antallHashMaps(){
         // returner størrelsen på array listen som inneholder hashmaps
@@ -105,13 +109,18 @@ public class SubsekvensRegister {
         return stoerste;
     }
 
-    public void mergeInternals() {
+    public void mergeAllInternals() {
+        // lag en tom hashmap som skal holde på
+        // all dataen i registeret merget sammen
         HashMap<String, Subsekvens> merged = new HashMap<>();
 
-        for (HashMap<String, Subsekvens> map: this.hashBeholder) {
+        // merge alle hashmapsene i registeret
+        for (HashMap<String, Subsekvens> map : this.hashBeholder) {
             merged = SubsekvensRegister.mergeHashMaps(merged, map);
         }
 
+        // fjern de forrige hashmapsene og legg
+        // til den hashmappen med alle dem merget
         this.hashBeholder.clear();
         this.hashBeholder.add(merged);
     }
@@ -133,11 +142,13 @@ public class SubsekvensRegister {
                 merged.put(key, map2.get(key));
             }
             
-            // hvis sekvens key allerede eksisterer i
-            // merged hashmap så legger man til 1 i antall
+            // hvis sekvens key allerede eksisterer i merged
+            // hashmap så legger man sammen antallet fra de
+            // 2 hver subsekvens fra map1 og map2
             else {
-                Subsekvens subsekvens = merged.get(key);
-                subsekvens.settAntall(subsekvens.hentAntall() + 1);
+                Subsekvens subsekvens1 = merged.get(key);
+                Subsekvens subsekvens2 = map2.get(key);
+                subsekvens1.settAntall(subsekvens1.hentAntall() + subsekvens2.hentAntall());
             }
         }
 
@@ -153,7 +164,7 @@ public class SubsekvensRegister {
         
         // bruk en indeks for å representere fil numer
         // og loop gjennom hver hashmap i array listen
-        for (HashMap<String, Subsekvens> map: this.hashBeholder) {
+        for (HashMap<String, Subsekvens> map : this.hashBeholder) {
             // legg til hver subsekvens i hashmpappet
             // til stringen output
             for (String sekvens: map.keySet()) {

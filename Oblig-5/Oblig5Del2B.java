@@ -29,17 +29,7 @@ public class Oblig5Del2B {
         // lag en array list som skal holde på alle threads som blir
         // laget til å lese filer slik at man kan vente på at alle
         // blir ferdig etter at de er startet
-        ArrayList<Thread> thread_pool = new ArrayList<>();
-        
-        // sett aktiv_lesing flagget til true for å indikere
-        // for flettetråden at den skal fortsette å vente til
-        // på at flere threads legges til
-        monitor.aktiv_lesing = true;
-        
-        // lag en flette thread som venter i bakgrunnen på
-        // at hashmaps blir lagt til og merger dem i registeret
-        Thread flette_trad = new Thread(new FletteTrad(monitor));
-        flette_trad.start();
+        ArrayList<Thread> read_thread_pool = new ArrayList<>();
         
         try {
             // lag en path til metadata filen ved å bruke mappe navnet
@@ -58,8 +48,8 @@ public class Oblig5Del2B {
                 // lag en ny thread som bruker en instanse av LeseTrad klassen
                 Thread new_thread = new Thread(new LeseTrad(file_path, monitor));
                 
-                // legg til den nye threaden i thread_pool
-                thread_pool.add(new_thread);
+                // legg til den nye threaden i read_thread_pool
+                read_thread_pool.add(new_thread);
 
                 new_thread.start();
             }
@@ -78,23 +68,42 @@ public class Oblig5Del2B {
         try {
             // bruk Thread.join() metoden for å vente på
             // at alle theads blir ferdig med å lese filene
-            for (Thread thread: thread_pool) {
+            for (Thread thread : read_thread_pool) {
                 thread.join();
             }
-
-            // sett aktiv lesing til false siden alle lese
-            // threads er ferdig med å lese filene
-            monitor.finishMerge();
-            
-            // vent for flette threaden å bli ferdig
-            flette_trad.join();
         }
+
         // gi feilmelding hvis brukeren velger å avbryte
         // programmet med ctrl+c mens det kjører
         catch (InterruptedException e) {
             System.err.print("Error: program was interrupted by user");
         }
 
+        // lag en array list som skal holde på alle threads som blir
+        // laget til å merge sammen hashmapsene i monitorer slik at
+        // man kan vente på at alle blir ferdig etter at de er startet
+        ArrayList<Thread> merge_thread_pool = new ArrayList<>();
+
+        // start 8 thread for som skal merge sammen alle hashmaps
+        // i en monitor sitt register til den bare har 1 hashmap.
+        for (int i = 0; i < 8; i++) {
+            Thread merge_thread = new Thread(new FletteTrad(monitor));
+            merge_thread_pool.add(merge_thread);
+            merge_thread.start();
+        }
+
+        // vent på at mergingen blir ferdig
+        try {
+            for (Thread thread : merge_thread_pool) {
+                thread.join();
+            }
+        }
+        
+        // gi feilmelding hvis brukeren velger å avbryte
+        // programmet med ctrl+c mens det kjører
+        catch (InterruptedException e) {
+            System.err.print("Error: program was interrupted by user");
+        }
 
         // print subsekvens monitoret
         System.out.println(monitor);

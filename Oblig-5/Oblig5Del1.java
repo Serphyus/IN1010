@@ -52,7 +52,7 @@ public class Oblig5Del1 {
             meta_scanner.close();
 
             // Merge sammen alle interne hashmapper
-            register.mergeInternals();
+            register.mergeAllInternals();
 
             // print subsekvens registeret
             System.out.println(register);

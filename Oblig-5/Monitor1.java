@@ -34,24 +34,11 @@ public class Monitor1 {
     }
     
     public HashMap<String, Subsekvens> hentHashMap(int indeks) {
-        // låst thread locken
-        this.thread_lock.lock();
-        
-        // lag en undefined hashmap som skal holde
-        // på hashmappen som hentes fra registeret
-        HashMap<String, Subsekvens> map;
+        return this.register.hentHashMap(indeks);
+    }
 
-        // hent hashmappet
-        try {
-            map = this.register.hentHashMap(indeks);
-        }
-
-        // lås opp thread locken selv om noe går galt
-        finally {
-            this.thread_lock.unlock();
-        }
-
-        return map;
+    public HashMap<String, Subsekvens> taUtHashMap(int indeks) {
+        return this.register.taUtHashMap(indeks);
     }
     
     public int antallHashMaps(){
@@ -75,8 +62,8 @@ public class Monitor1 {
         return antall;
     }
 
-    public void mergeInternals() {
-        this.register.mergeInternals();
+    public void mergeAllInternals() {
+        this.register.mergeAllInternals();
     }
 
     public Subsekvens hentStoerste() {

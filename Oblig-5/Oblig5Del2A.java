@@ -80,7 +80,7 @@ public class Oblig5Del2A {
         }
 
         // Merge sammen alle interne hashmapper
-        monitor.mergeInternals();
+        monitor.mergeAllInternals();
         
         // print subsekvens monitoret
         System.out.println(monitor);

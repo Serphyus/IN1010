@@ -26,23 +26,11 @@ public class Oblig5Hele {
         // lag en array list som skal holde på alle threads som blir
         // laget til å lese filer slik at man kan vente på at alle
         // blir ferdig etter at de er startet
-        ArrayList<Thread> thread_pool = new ArrayList<>();
+        ArrayList<Thread> read_thread_pool = new ArrayList<>();
         
         // lag en monitor for friske og en monitor for syke
-        Monitor2 monitor_frisk = new Monitor2();
-        Monitor2 monitor_syk = new Monitor2();
-
-        monitor_frisk.aktiv_lesing = true;
-        monitor_syk.aktiv_lesing = true;
-
-        // lag en flette thread som skal venter i bakgrunnen på
-        // at hashmaps blir lagt til og merger dem i registeret
-        Thread flette_trad_frisk = new Thread(new FletteTrad(monitor_frisk));
-        Thread flette_trad_syk = new Thread(new FletteTrad(monitor_syk));
-        
-        // start flette threads
-        flette_trad_frisk.start();
-        flette_trad_syk.start();
+        Monitor2 monitor_f = new Monitor2();
+        Monitor2 monitor_s = new Monitor2();
         
         try {
             // lag en path til metadata filen ved å bruke mappe navnet
@@ -64,17 +52,17 @@ public class Oblig5Hele {
                 
                 LeseTrad lese_thread;
                 if (syk_status.equals("True")) {
-                    lese_thread = new LeseTrad(file_path, monitor_syk);
+                    lese_thread = new LeseTrad(file_path, monitor_s);
                 }
                 
                 else {
-                    lese_thread = new LeseTrad(file_path, monitor_frisk);
+                    lese_thread = new LeseTrad(file_path, monitor_f);
                 }
                 // lag en ny thread som bruker en instanse av LeseTrad klassen
                 Thread new_thread = new Thread(lese_thread);
                 
                 // legg til den nye threaden i thread_pool
-                thread_pool.add(new_thread);
+                read_thread_pool.add(new_thread);
 
                 // start den nye threaden og la den kjøre i bakgrunnen
                 new_thread.start();
@@ -93,20 +81,42 @@ public class Oblig5Hele {
         try {
             // bruk Thread.join() metoden for å vente på
             // at alle theads blir ferdig med å lese filene
-            for (Thread thread: thread_pool) {
+            for (Thread thread : read_thread_pool) {
                 thread.join();
             }
-
-            // sett aktiv lesing til false siden alle lese
-            // threads er ferdig med å lese filene
-            monitor_frisk.finishMerge();
-            monitor_syk.finishMerge();
-
-            // vent for flette threaden å bli ferdig
-            flette_trad_frisk.join();
-            flette_trad_syk.join();
-
         }
+
+        // gi feilmelding hvis brukeren velger å avbryte
+        // programmet med ctrl+c mens det kjører
+        catch (InterruptedException e) {
+            System.err.print("Error: program was interrupted by user");
+        }
+
+        // lag en array list som skal holde på alle threads som blir
+        // laget til å merge sammen hashmapsene i monitorer slik at
+        // man kan vente på at alle blir ferdig etter at de er startet
+        ArrayList<Thread> merge_thread_pool = new ArrayList<>();
+
+        // start 8 thread for hver monitor som merger
+        // deres interne hashmaps til de bare har 1.
+        for (int i = 0; i < 8; i++) {
+            Thread merge_thread_f = new Thread(new FletteTrad(monitor_f));
+            Thread merge_thread_s = new Thread(new FletteTrad(monitor_s));
+
+            merge_thread_pool.add(merge_thread_f);
+            merge_thread_pool.add(merge_thread_s);
+
+            merge_thread_f.start();
+            merge_thread_s.start();
+        }
+
+        // vent på at mergingen blir ferdig
+        try {
+            for (Thread thread : merge_thread_pool) {
+                thread.join();
+            }
+        }
+        
         // gi feilmelding hvis brukeren velger å avbryte
         // programmet med ctrl+c mens det kjører
         catch (InterruptedException e) {
@@ -124,8 +134,8 @@ public class Oblig5Hele {
         ArrayList<Subsekvens> vanlig_smitte = new ArrayList<>();
         
         // finn alle sekvenser med høyere antall i syke enn friske
-        HashMap<String, Subsekvens> frisk_hashmap = monitor_frisk.hentHashMap(0);
-        HashMap<String, Subsekvens> syk_hashmap = monitor_syk.hentHashMap(0);
+        HashMap<String, Subsekvens> frisk_hashmap = monitor_f.hentHashMap(0);
+        HashMap<String, Subsekvens> syk_hashmap = monitor_s.hentHashMap(0);
         
         // loop gjennom alle subsekvenser hos syke personer
         for (String sekvens: syk_hashmap.keySet()) {
