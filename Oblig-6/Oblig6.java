@@ -31,8 +31,9 @@ public class Oblig6 {
             // les bruker inptu
             choice = stdin.nextLine();
 
-            // skjekk om inputtet gitt er -1 for da å exite main
+            // skjekk om inputtet gitt er -1 for da å stoppe programmet
             if (choice.equals("-1")) {
+                stdin.close();
                 System.exit(0);
             } 
 
@@ -40,8 +41,9 @@ public class Oblig6 {
             String[] line_split = choice.split(" ");
             
             // sørg for at brukeren ga 2 verdier som input 
-            if (line_split.length < 2 || line_split.length > 2) {
-                System.err.println("input maa ha 2 kordinater");
+            if (line_split.length != 2) {
+                System.err.println("input krever ha 2 kordinater");
+                continue;
             }
 
             // prøv å parse string dataen til int verdier som blir
@@ -62,12 +64,11 @@ public class Oblig6 {
 
                     // output labyrinten etter å ha markert den
                     System.out.println(labyrint);
-
                 }
             }
 
             catch (NumberFormatException e) {
-                System.err.println("ugyldige nummere i input");
+                System.err.println("input krever ha 2 kordinater");
             }
 
             catch (ArrayIndexOutOfBoundsException e) {
