@@ -16,7 +16,6 @@ public class Oblig6 {
         }
 
         // lager en ny labyrint med fil argumentet
-        // og printer ut den nye labyrinten
         Labyrint labyrint = new Labyrint(args[0]);
         System.out.println(labyrint);
 
@@ -52,6 +51,7 @@ public class Oblig6 {
                 int x = Integer.parseInt(line_split[1]);
                 
                 // finn alle veier ut fra kordinatet (y,x)
+                labyrint.reset_field();
                 ArrayList<ArrayList<Tuppel>> paths = labyrint.finnUtveiFra(y, x);
                 
                 // hvis lengden på paths er 0 ble det ikke funnet noen ingen vei ut fra (y,x)
@@ -79,7 +79,7 @@ public class Oblig6 {
                             labyrint.markPath(paths.get(Integer.parseInt(display_choice)-1));
                         
                             // output labyrinten etter å ha markert den
-                            System.out.println(labyrint);
+                            System.out.println(String.format("\n%s", labyrint));
 
                             System.out.println("[Press Enter To Return]");
                             stdin.nextLine();
@@ -88,6 +88,10 @@ public class Oblig6 {
                         // i tilfelle brukeren gir et ugyldig nummer
                         catch (NumberFormatException | IndexOutOfBoundsException e) {}
                     }
+
+                    // reset labyrint og print den ut på nytt
+                    labyrint.reset_field();
+                    System.out.println(String.format("\033[H\033[2J\033[3J%s", labyrint));
                 }
             }
             
