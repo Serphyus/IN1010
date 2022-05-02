@@ -8,7 +8,6 @@ public class Labyrint {
     private Rute[][] field;
     private int height;
     private int width;
-    private int aapninger = 0;
 
     public Labyrint (String filename) {
         try {
@@ -53,7 +52,6 @@ public class Labyrint {
                         // så er den en Aapning, ellers er den bare en hvit rute
                         if (x == 0 || x == width-1 || y == 0 || y == height-1) {
                             rute = new Aapning(y, x, this);
-                            this.aapninger++;
                         }
                         else {
                             rute = new HvitRute(y, x, this);
@@ -109,36 +107,29 @@ public class Labyrint {
         }
     }
 
-    public ArrayList<Tuppel> finnUtveiFra (int y, int x) {
-        // reset alle used indikatorer i labyrinten som ble
-        // satt fra tidligere path findings
-        this.reset_field();
+    public ArrayList<ArrayList<Tuppel>> finnUtveiFra (int y, int x) {
+        // lag en path array som skal holde på veien som er
+        // i bruk og fullførte veier som leder ut
+        ArrayList<Tuppel> path = new ArrayList<>();
+        ArrayList<ArrayList<Tuppel>> completed = new ArrayList<>();
 
         // skjekk at (y,x) er inne i labyrinten
-        if ((x > 0 || x < this.width) || (y > 0 || y < this.height)) {
-            
-            // lag en path array som skal holde på veien ut
-            ArrayList<Tuppel> path = new ArrayList<>();
-            
+        if (x > 0 || x < this.width || y > 0 || y < this.height) {
             // hent start ruten og kall på dens finn metode
             // for å finne en vei ut av labyrinten.
             Rute start = this.field[y][x];
-            start.finn(null, path);
-            
-            // returner path listen hvis det ble funnet en vei ut
-            if (path.size() > 0) {
-                Tuppel end = path.get(path.size()-1);
-                if (end.finish) {
-                    return path;
-                }
-            }
+            start.finn(null, path, completed);
         }
 
-        // hvis ingen vei ut ble funnet så returnerer metoden null
-        return null;
+        // returner alle veiene ut som ble funnet
+        return completed;
     }
 
     public void markPath (ArrayList<Tuppel> path) {
+        // reset alle used indikatorer i labyrinten som ble
+        // satt fra tidligere path findings
+        this.reset_field();
+        
         // marker alle ruter i path arraylisten
         for (Tuppel pos : path) {
             this.field[pos.y][pos.x].mark();

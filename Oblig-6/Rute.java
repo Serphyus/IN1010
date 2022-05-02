@@ -19,7 +19,7 @@ public abstract class Rute {
     }
 
     // lag abstrakte metoder som må overskrives
-    abstract public void finn (Rute fra, ArrayList<Tuppel> path);
+    abstract public void finn (Rute fra, ArrayList<Tuppel> path, ArrayList<ArrayList<Tuppel>> completed);
     abstract public void reset ();
     abstract public void mark();
     abstract public String toString ();

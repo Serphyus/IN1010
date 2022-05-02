@@ -10,7 +10,7 @@ public class HvitRute extends Rute {
     }
 
     @Override
-    public void finn (Rute fra, ArrayList<Tuppel> path) {
+    public void finn (Rute fra, ArrayList<Tuppel> path, ArrayList<ArrayList<Tuppel>> completed) {
         // skjekk om rute allerede er brukt
         if (this.used) {
             return;
@@ -20,7 +20,7 @@ public class HvitRute extends Rute {
         this.used = true;
 
         // lag en ny tuppel og legg den til path
-        Tuppel current = new Tuppel(this.y, this.x, false);
+        Tuppel current = new Tuppel(this.y, this.x);
         path.add(current);
 
         // lag en array av naboer som skal skjekkes for mulige veier
@@ -30,13 +30,7 @@ public class HvitRute extends Rute {
         // og om de legger seg selv til etter å kalle finn metoden
         for (Rute neste : available) {
             if (neste != fra && neste != null) {
-                neste.finn(this, path);
-
-                // hvis den neste siste posisjonen er en
-                // finish posisjon så stopper finn metoden
-                if (path.get(path.size()-1).finish) {
-                    return;
-                }
+                neste.finn(this, path, completed);
             }
         }
 

@@ -10,7 +10,7 @@ public class SortRute extends Rute {
     // finn eller reset metode gjøre noe
 
     @Override
-    public void finn (Rute fra, ArrayList<Tuppel> path) {}
+    public void finn (Rute fra, ArrayList<Tuppel> path, ArrayList<ArrayList<Tuppel>> completed) {}
 
     @Override
     public void reset () {}
