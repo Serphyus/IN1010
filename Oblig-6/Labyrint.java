@@ -50,7 +50,7 @@ public class Labyrint {
 
                         // hvis ruten befinner seg på en av endene i labyrinten
                         // så er den en Aapning, ellers er den bare en hvit rute
-                        if ((x == 0 || x == width-1) || (y == 0 || y == height-1)) {
+                        if (x == 0 || x == width-1 || y == 0 || y == height-1) {
                             rute = new Aapning(y, x, this);
                         }
                         else {
@@ -91,8 +91,8 @@ public class Labyrint {
         // vi bare å sette nord og vest på ruten vi er på i
         // loopen og nord/vest nodene sin sør/øst node blir
         // den ruten vi er på i loopen
-        for (int y = 1; y < this.height-1; y++) {
-            for (int x = 1; x < this.width-1; x++) {
+        for (int y = 1; y < this.height; y++) {
+            for (int x = 1; x < this.width; x++) {
                 Rute rute = this.field[y][x];
                 
                 Rute n_rute = this.field[y-1][x];
@@ -130,6 +130,7 @@ public class Labyrint {
                     return path;
                 }
             }
+            System.out.println(field[y][x].getClass().getSimpleName());
         }
 
         // hvis ingen vei ut ble funnet så returnerer metoden null
