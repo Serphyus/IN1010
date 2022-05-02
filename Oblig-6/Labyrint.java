@@ -8,6 +8,7 @@ public class Labyrint {
     private Rute[][] field;
     private int height;
     private int width;
+    private int aapninger = 0;
 
     public Labyrint (String filename) {
         try {
@@ -52,6 +53,7 @@ public class Labyrint {
                         // så er den en Aapning, ellers er den bare en hvit rute
                         if (x == 0 || x == width-1 || y == 0 || y == height-1) {
                             rute = new Aapning(y, x, this);
+                            this.aapninger++;
                         }
                         else {
                             rute = new HvitRute(y, x, this);
@@ -130,14 +132,13 @@ public class Labyrint {
                     return path;
                 }
             }
-            System.out.println(field[y][x].getClass().getSimpleName());
         }
 
         // hvis ingen vei ut ble funnet så returnerer metoden null
         return null;
     }
 
-    public void markPath(ArrayList<Tuppel> path) {
+    public void markPath (ArrayList<Tuppel> path) {
         // marker alle ruter i path arraylisten
         for (Tuppel pos : path) {
             this.field[pos.y][pos.x].mark();

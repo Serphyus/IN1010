@@ -3,7 +3,7 @@ public class Tuppel {
     public final int x;
     public final boolean finish;
 
-    public Tuppel(int y, int x, boolean finish) {
+    public Tuppel (int y, int x, boolean finish) {
         this.y = y;
         this.x = x;
 
@@ -13,7 +13,7 @@ public class Tuppel {
     }
 
     @Override
-    public String toString() {
+    public String toString () {
         return String.format("(%s,%s)", this.y, this.x);
     }
 }

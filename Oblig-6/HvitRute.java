@@ -55,7 +55,7 @@ public class HvitRute extends Rute {
     }
 
     @Override
-    public void mark() {
+    public void mark () {
         // marker ruten slik at den vil printes med farge
         this.mark = true;
     }
