@@ -20,6 +20,6 @@ public class SortRute extends Rute {
 
     @Override
     public String toString () {
-        return String.format("##");
+        return "##";
     }
 }
