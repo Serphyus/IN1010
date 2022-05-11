@@ -27,13 +27,16 @@ public class Game {
         this.field = new Field(height, width);
         this.window = new Window(this.field);
         
+        // lag et vindu som snake skal spilles i
         this.window.setTitle("Snake Game");
         this.window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.window.setVisible(true);
         this.window.setSize(600, 600);
+        this.window.setVisible(true);
     }
     
     public void start () {
+        // start en listener for å oppdage om 
+        // spilleren trykker en av piltastene
         this.window.startListener(this);
         
         // slangen starter i midten av feltet
@@ -87,6 +90,7 @@ public class Game {
             }
         }
 
+        // slangen traff en vegg er det game over
         catch (ArrayIndexOutOfBoundsException e) {
             this.gameOver();
             return;

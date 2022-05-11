@@ -10,6 +10,9 @@ public class KeyboardController extends KeyAdapter {
     }
     
     public void keyPressed (KeyEvent event) {
+        // skjekk key koden til kanppen som ble
+        // trykket og bruk switch cases for å
+        // skjekke om den er en av piltastene
         switch (event.getKeyCode()) {
             case KeyEvent.VK_LEFT:
                 this.game.setDirection(Game.LEFT);

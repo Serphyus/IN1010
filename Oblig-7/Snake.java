@@ -19,20 +19,26 @@ public class Snake {
     }
 
     public void addSquare (Square square) {
+        // legg til en ny square og gjør den grønn
         this.body.add(square);
         square.setColor(Color.green);
     }
 
     public Square getHead () {
+        // hent hodet til slangen
         return this.body.get(this.body.size()-1);
     }
 
     public void removeTail () {
+        // fjern det siste feltet i slangen
+        // og reset fargen til feltet
         Square tail = this.body.remove(0);
         tail.resetColor();
     }
 
     public void gameOver () {
+        // sett en rød fage på hodet til slangen
+        // når spilleren har kræsjet inn i noe
         this.getHead().setColor(Color.red);
     }
 }
