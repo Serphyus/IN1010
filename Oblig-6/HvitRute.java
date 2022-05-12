@@ -26,7 +26,7 @@ public class HvitRute extends Rute {
         // lag en array av naboer som skal skjekkes for mulige veier
         Rute[] available = {this.nord, this.syd, this.vest, this.oest};
 
-        // loop gjennom hver eneste nabo og skjell om de er hvite
+        // loop gjennom hver eneste nabo og skjekk om de er hvite
         // og om de legger seg selv til etter å kalle finn metoden
         for (Rute neste : available) {
             if (neste != fra && neste != null) {
