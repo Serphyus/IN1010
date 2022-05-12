@@ -36,6 +36,6 @@ public class Window extends JFrame {
         // lag en keyboard listener til dette vinduet.
         // dette funker ikke med flere paneler på grunn
         // av hvordan java swing fokuserer på paneler.
-        this.addKeyListener(new KeyboardController(game));
+        this.addKeyListener(new Controller(game));
     }
 }

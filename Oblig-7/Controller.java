@@ -2,10 +2,10 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
 
-public class KeyboardController extends KeyAdapter {
+public class Controller extends KeyAdapter {
     private Game game;
     
-    public KeyboardController (Game game) {
+    public Controller (Game game) {
         this.game = game;
     }
     
