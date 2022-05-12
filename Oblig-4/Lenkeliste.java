@@ -19,15 +19,7 @@ abstract class Lenkeliste<T> implements Liste<T> {
 
         @Override
         public boolean hasNext() {
-            // hvis start er null har den ikke neste
-            if (node == null) {
-                return false;
-            }
-            
-            // skjekk om den noden er null
-            else {
-                return (node != null);
-            }
+            return (node != null);
         }
     
         @Override
