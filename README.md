@@ -5,5 +5,5 @@ by the University in Oslo for in the IN1010 course of 2022. If you wish to use t
 assignment go ahead, but __PLEASE DO NOT DIRECTLY COPY__. Just use this to understand the assignment and make your own code work.
 
 ### Credits for Oblig 4 (Group Project)
-- Mohammad Fadel
-- Gabriel Cyrus
+- [Mohammad Fadel](https://github.com/Fadel-2000)
+- [Gabriel Cyrus](https://github.com/GabrielCD98)
